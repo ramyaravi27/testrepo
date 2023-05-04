@@ -1,2 +1,3490 @@
-test
-fchg
+index.html
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DC Documentation</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+  integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+  <style>
+    @font-face {
+      font-family: 'Poppins-Bold';
+      src: url('./assets/fonts/poppins/Poppins-Bold.ttf');
+    }
+
+    @font-face {
+      font-family: 'Poppins-Medium';
+      src: url('./assets/fonts/poppins/Poppins-Medium.ttf');
+    }
+
+    @font-face {
+      font-family: 'Poppins-Regular';
+      src: url('./assets/fonts/poppins/Poppins-Regular.ttf');
+    }
+    </style>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+  integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
+  integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
+  crossorigin="anonymous"></script>
+  <app-root></app-root>
+</body>
+</html>
+
+
+login.html
+
+<body>
+  <div class="limiter" *ngIf="showLoginForm">
+    <div class="container-login100"
+      style="background-image: url(./assets/logon/bg_1.svg); background-repeat: repeat; background-size: cover;">
+      <div class="wrap-login100"
+        style="width: 756px;background: #fff;border-radius: 10px;overflow: visible;display: -webkit-box;    display: -webkit-flex; display: -moz-box; display: -ms-flexbox;display: flex; flex-wrap: wrap; justify-content: space-around; padding: 30px 50px 15px 10px;">
+        <div class="login100-pic">
+          <img src="./assets/logon/login-image.svg" alt="IMG"
+            style="width: 570px; position: relative; right: 150px;top: 10px;max-width: 900px;">
+        </div>
+        <form class="login100-form validate-form"
+          *ngIf="!resetPWD && !capcha && !enterNewPassword && !otpNumber && !forgotPasswordOtp">
+          <span class="login100-form-title">
+            <span style="float: right;padding-bottom: 0px"> <span class="font-size-32"
+                style="color: #6EACAF !important;">D</span><span class="text-secondary font-size-32"
+                style="color: #B3B3B3;">C</span></span>
+          </span>
+          <div style="margin-top: 50px;">
+            <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+              <input class="input100" type="text" autocomplete="off" placeholder="Username"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required #username="ngModel"
+                [(ngModel)]="userName" [ngModelOptions]="{standalone: true}" caps-lock (keyup)="ErrorMsg(userName)"
+                (focusout)="shownCaptcha(userName)"  />
+              <span class="focus-input100"></span>
+              <span class="symbol-input100">
+                <i class="fa fa-envelope" aria-hidden="true" style="position: relative;bottom: 5px;"></i>
+              </span>
+              <div class="errorlab">
+                <span *ngIf="msgView && username.touched && username.invalid && !username.hasError('pattern')"
+                  class="form-text">
+                  Please enter the email ! </span>
+                <span style="display: block" class="form-text" [hidden]="!username.hasError('pattern')">Email format
+                  should
+                  be <small><strong>user@dccpedge.com</strong> </small>
+                </span>
+              </div>
+            </div>
+            <div class="wrap-input100 validate-input" data-validate="Password is required">
+              <input type="password" id="password" class="input100 input-password" required placeholder="Password" onpaste="return false;" ondrop="return false;"
+                [ngModelOptions]="{standalone: true}" [(ngModel)]="password" #pwd="ngModel"
+                (keyup)="ErrorMsg(password)">
+              <span class="focus-input100"></span>
+              <span class="symbol-input100">
+                <i class="fa fa-lock" aria-hidden="true" style="position: relative;bottom: 6px;left: 5px;"></i>
+              </span>
+              <em class="fa fa-eye-slash open-close-eye" id="eyemask" (click)="eyemask()"></em>
+              <div class="errorlab">
+                <span *ngIf="pwd.touched && pwd.invalid && msgView" class="form-text">
+                  Please enter the password !
+                </span>
+              </div>
+            </div>
+            <div class="wrap-input100 validate-input" *ngIf="enable_CaptchaField">
+              <span class="txt2" style="font-weight: 500;display: block;text-align: center;">Type the characters you see in the picture below.  Please note that letters are case sensitive</span>
+              <div class="col-12 text-center">
+                <img id="Captcha_Image" style="background-image: url('./assets/logon/captcha_background.png');"
+                  [src]="img_Captcha" alt="">
+                <a href="javascript:void(0);" (click)="recall_Captcha(userName);"><span style="font-size:12px;"
+                    class="fa fa-refresh"></span></a>
+                <input class="input100" type="text" style="padding-left: 50px;" autocomplete="off"
+                  placeholder="Enter your captcha code " [ngModelOptions]="{standalone: true}"
+                  [(ngModel)]="captcha_Field" #captcha="ngModel" required maxlength="6" />
+              </div>
+            </div>
+            <span style="text-align: center; height:10px">
+              <label *ngIf=" error_msg" class="form-text">{{errorMsg}}</label>
+            </span>
+            <span style="text-align: center; height:10px">
+              <label *ngIf="capslockOn" class="form-text">CapsLock is On</label>
+            </span>
+            <div class="container-login100-form-btn"  style="padding-top: 5px !important;">
+              <button class="login100-form-btn" style="background-color: #6EACAF !important"(click)="getCurrentUserTokenStatus();" type="submit">
+                <span *ngIf="loginSpinner" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>Login
+              </button>
+              
+            <div class="float-right mt-2 mr-2">
+              <span class=" txt1">
+              </span>
+              <a class="txt2" style="cursor: pointer;" (click)="resetpwd('reset')">
+                Forgot Password?
+              </a>
+            </div>
+          </div> 
+      </div>
+  <!-- <div  class="modal-content" *ngIf="show">
+            
+    <div class="modal-body" style="padding: 20px;">
+      <div class="content">
+        <div class="form-wrapper">
+          <div class="form-group">
+            <label class="form-label"> your login session is already active now, would you like to continue here </label>
+          </div>
+          <div class="form-group" class="mt-20">
+            <button type="button" class="btn save_btn" (click)="yes();" style="margin-right: 10px;background-color: #6EACAF !important;
+            border-color: #6EACAF !important;color: white !important;">Yes</button>
+            <button type="button" class="btn cancel_btn" style="background-color: #c9656a !important;
+            border-color: #c9656a !important;color: white !important;" (click)="logout()">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  
+  </div> -->
+          <!-- 
+          <div  class="modal-content" *ngIf="show">
+            
+             <div class="modal-body" style="padding: 20px;">
+               <div class="content">
+                 <div class="form-wrapper">
+                   <div class="form-group">
+                     <label class="form-label"> your login session is already active now, would you like to continue here </label>
+                   </div>
+                   <div class="form-group" class="mt-20">
+                     <button type="button" class="btn save_btn" (click)="yes();" style="margin-right: 10px;background-color: #6EACAF !important;
+                     border-color: #6EACAF !important;color: white !important;">Yes</button>
+                     <button type="button" class="btn cancel_btn" style="background-color: #c9656a !important;
+                     border-color: #c9656a !important;color: white !important;" (click)="logout()">No</button>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             
+           </div>
+           </div>
+           </div> -->
+        </form>
+        <form class="login100-form validate-form" *ngIf="resetPWD" #userNameEntry="ngForm" id="frmUserNameEntry"
+          (ngSubmit)="btnGetUserName(userNameEntry.value,userNameEntry)">
+          <span class="login100-form-title ">
+            <span style="float: right;padding-bottom: 0px"> <span class="font-size-32"
+                style="color: #6EACAF !important;">D</span><span class="text-secondary font-size-32"
+                style="color: #B3B3B3;">C</span></span>
+          </span>
+          <div style="margin-top: 50px;">
+            <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+              <input class="input100" required type="text" placeholder="Enter Username" name="Username"
+                autocomplete="off" [(ngModel)]="forgotPasswordData.username">
+              <span class="focus-input100"></span>
+              <span class="symbol-input100">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+              </span>
+            </div>
+            <span style="text-align: center; height:10px">
+              <label *ngIf="user_ErrorMsg" class="form-text">{{userErrorMsg}}</label>
+            </span>
+            <span style="text-align: center; height:10px">
+              <label *ngIf="capslockOn" class="form-text">CapsLock is On</label>
+            </span>
+            <div class="container-login100-form-btn">
+              <button class="login100-form-btn" style="background-color: #B3B3B3 !important ;" type="submit" *ngIf="click"
+                [disabled]="userNameEntry"><span *ngIf="SubmitSpinner" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>Submited
+              </button>
+              <button class="login100-form-btn" style="background-color: #6EACAF !important" type="submit" *ngIf="!click"
+                [disabled]="userNameEntry.invalid"><span *ngIf="SubmitSpinner" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>Submit
+              </button>
+            </div>
+            <div class="text-center p-t-12">
+              <span class="txt1">
+              </span>
+              <a class="txt2" style="cursor: pointer;" (click)="newPassword('login')">
+                Back to Login
+              </a>
+            </div>
+          </div>
+        </form>
+        <form class="login100-form validate-form" *ngIf="capcha" #capchaCodeEntry="ngForm" id="frmcapchaCodeEntry"
+          (ngSubmit)="btnGetcapchaCode(capchaCodeEntry.value,capchaCodeEntry)">
+          <span class="login100-form-title ">
+            <span style="float: right;padding-bottom: 0px"> <span class="font-size-32"
+                style="color: #6EACAF !important;">D</span><span class="text-secondary font-size-32"
+                style="color: #B3B3B3;">C</span></span>
+          </span>
+          <div style="margin-top: 50px;">
+            <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+              <input class="input100" type="text" placeholder="Enter code" name="capchaCode" required autocomplete="off"
+                [(ngModel)]="forgotPasswordData.captchacode">
+              <span class="focus-input100"></span>
+            </div>
+            <img src="data:image/png;base64,{{imageChange}}" alt='' style="width: 100%;height: auto;">
+            <div class="text-center p-t-12">
+              <a class="txt2" style="position: relative;right: 30%;cursor: pointer;" (click)="  tryOtherImage()">
+                Try Other Image
+              </a>
+            </div>
+            <span style="text-align: center; height:10px">
+              <label *ngIf="captcha_ErrorMsg" class="form-text">{{captchaErrorMsg}}</label>
+            </span>
+            <span style="text-align: center; height:10px">
+              <label *ngIf="capslockOn" class="form-text">CapsLock is On</label>
+            </span>
+            <div class="container-login100-form-btn">
+              <button class="login100-form-btn" style="background-color: #6EACAF !important" type="submit"
+                [disabled]="capchaCodeEntry.invalid"><span *ngIf="SubmitSpinner" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>Submit
+              </button>
+            </div>
+            <div class="text-center p-t-12">
+              <span class="txt1">
+              </span>
+              <a class="txt2" style="cursor: pointer;" (click)="newPassword('login')">
+                Back to Login
+              </a>
+            </div>
+          </div>
+        </form>
+        <form class="login100-form validate-form" *ngIf="enterNewPassword" #newPasswordDetail="ngForm"
+          id="frmnewPasswordDetails" (ngSubmit)="btnGetNewPasswordDetails(newPasswordDetail.value,newPasswordDetails)">
+          <span class="login100-form-title ">
+            <span style="float: right;padding-bottom: 0px"> <span class="font-size-32"
+                style="color: #6EACAF !important;">D</span><span class="text-secondary font-size-32"
+                style="color: #B3B3B3;">C</span></span>
+          </span>
+          <div style="margin-top: 50px;">
+            <div class="wrap-input100 validate-input">
+              <input type="password" required id="oldpassword" class="input100 input-password"
+                placeholder="New Password" [(ngModel)]="forgotPasswordData.newPassword" #newPasswordData="ngModel"
+                name="newPasswordData" style="font-family: 'Calibri';font-size: 15px;"
+                pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,32}$" maxlength="32"
+                (keyup)="onKey1($event)" (focus)="focus($event,'show')" (blur)="outfocus($event,'show')">
+              <span class="focus-input100"></span>
+              <span class="symbol-input100">
+                <i class="fa fa-lock" aria-hidden="true"></i>
+              </span>
+
+              <em class="fa fa-eye-slash open-close-eye" id="eyemask" (click)="eyemask()"></em>
+              <span class="tooltiptext2" id="show">
+                <i *ngIf="!passkey3" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passkey3" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must be
+                <strong>8 t0 32 characters long</strong><br>
+                <i *ngIf="!passkey1" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passkey1" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must have
+                <strong>1 uppercase letter</strong><br>
+                <i *ngIf="!passkey" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passkey" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must have
+                <strong>1 lowercase letter</strong><br>
+                <i *ngIf="!passkey2" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passkey2" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must have
+                <strong>1 number</strong><br>
+                <i *ngIf="!passkey4" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passkey4" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must have
+                <strong>1 special character like(!@#$,etc.)</strong><br>
+              </span>
+            </div>
+
+            <div *ngIf="newPasswordData.invalid && (newPasswordData.dirty || newPasswordData.touched)" class="form-text"
+              style="text-align: center;">
+              <div [hidden]="!newPasswordData.hasError('pattern')">Please create a password per the requirements below
+              </div>
+            </div>
+            <div class="wrap-input100 validate-input">
+              <input type="password" id="newpassword" required class="input100 input-password 12"
+                style="font-family: 'Calibri';font-size: 15px;" placeholder="Confirm Password" (keyup)="onKey2($event)"
+                pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,32}$" #confirmPassword="ngModel"
+                [(ngModel)]="forgotPasswordData.confirmPassword" (focus)="focus($event,'shown')"
+                (blur)="outfocus($event,'shown')" name="confirmPassword">
+              <span class="focus-input100"></span>
+              <span class="symbol-input100">
+                <i class="fa fa-lock" aria-hidden="true"></i>
+              </span>
+              <em class="fa fa-eye-slash open-close-eye" id="eyemask1" (click)="eyemask1()"></em>
+              <span class="tooltiptext2" id="shown">
+                <i *ngIf="!passval3" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passval3" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must be
+                <strong>8 t0 32 characters long</strong><br>
+                <i *ngIf="!passval1" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passval1" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must have
+                <strong>1 uppercase letter</strong><br>
+                <i *ngIf="!passval" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passval" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must have
+                <strong>1 lowercase letter</strong><br>
+                <i *ngIf="!passval2" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passval2" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must have
+                <strong>1 number</strong><br>
+                <i *ngIf="!passval4" class="fa fa-times password-validaition-before" aria-hidden="true"></i>
+                <i *ngIf="passval4" class="fa fa-check password-validaition-after" aria-hidden="true"></i>Must have
+                <strong>1 special character like(!@#$,etc.)</strong><br>
+              </span>
+            </div>
+            <div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" class="form-text"
+              style="text-align: center;">
+              <div [hidden]="!confirmPassword.hasError('pattern')">Please create a password per the requirements below
+              </div>
+            </div>
+            <span style="text-align: center; height:10px">
+              <label *ngIf="password_ErrorMsg" class="form-text">{{passwordErrorMsg}}</label>
+            </span>
+            <span style="text-align: center; height:10px">
+              <label *ngIf="showMsg24hrs" class="form-text">{{msg24hrs}}</label>
+            </span>
+            <span style="text-align: center; height:10px">
+              <label *ngIf="capslockOn" class="form-text">CapsLock is On</label>
+            </span>
+            <div class="container-login100-form-btn">
+              <button class="login100-form-btn" style="background-color: #6EACAF !important" type="submit"
+                [disabled]=" newPasswordData.hasError('pattern') || newPasswordDetail.invalid"><span *ngIf="SubmitSpinner" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>Submit
+              </button>
+            </div>
+            <div class="text-center p-t-12">
+              <span class="txt1">
+              </span>
+              <a class="txt2" style="cursor: pointer;" (click)="newPassword('login')">
+                Back to Login
+              </a>
+            </div>
+          </div>
+        </form>
+        <form class="login100-form validate-form" *ngIf="otpNumber" #otpNumberEntry="ngForm" id="frmOtpNumberEntry"
+          (ngSubmit)="btnOtpNumber(otpNumberEntry.value,otpNumberEntry)">
+          <span class="login100-form-title ">
+            <span style="float: right;padding-bottom: 0px"> <span class="font-size-32"
+                style="color: #6EACAF !important;">D</span><span class="text-secondary font-size-32"
+                style="color: #B3B3B3;">C</span></span>
+          </span>
+          <div style="margin-top: 50px;">
+            <div class="wrap-input100 validate-input">
+              <input class="input100" required type="text" placeholder="Enter OTP Number" name="otpNumbervalue"
+                autocomplete="off" [(ngModel)]="otpNumbervalue">
+              <span style="text-align: center;height: 10px;">
+                <label *ngIf="!otpNumber_ErrorMsg" class="form-text" style="color: #666666 !important;">OTP has been
+                  sent to your registered EMail ID</label>
+              </span>
+              <span style="text-align: center; height:10px">
+                <label *ngIf="otpNumber_ErrorMsg" class="form-text">{{otpNumberErrorMsg}}</label>
+              </span>
+            </div>
+            <div class="container-login100-form-btn">
+              <button class="login100-form-btn" style="background-color: #6EACAF !important" type="submit"
+                [disabled]="otpNumberEntry.invalid"><span *ngIf="SubmitSpinner" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>Submit
+              </button>
+            </div>
+            <div class="text-center p-t-12">
+              <span class="txt1">
+              </span>
+              <a class="txt2" style="cursor: pointer;" (click)="newPassword('login')">
+                Back to Login
+              </a>
+            </div>
+          </div>
+        </form>
+        <form class="login100-form validate-form" *ngIf="forgotPasswordOtp" #forgotPasswordOtpEntry="ngForm"
+          id="forgotPasswordOtpEntryForm"
+          (ngSubmit)="btnForgotOtpNumber(forgotPasswordOtpEntry.value,forgotPasswordOtpEntry)">
+          <span class="login100-form-title ">
+            <span style="float: right;padding-bottom: 0px"> <span class="font-size-32"
+                style="color: #6EACAF !important;">D</span><span class="text-secondary font-size-32"
+                style="color: #B3B3B3;">C</span></span>
+          </span>
+          <div style="margin-top: 50px;">
+            <div class="wrap-input100 validate-input">
+              <input class="input100" required type="text" placeholder="Enter OTP Number" name="forgotOtpNumbervalue"
+                autocomplete="off" [(ngModel)]="forgotOtpNumbervalue">
+              <span style="text-align: center;height: 10px;">
+                <label *ngIf="!showMsghrs" class="form-text" style="color: #666666 !important;">OTP has been sent to your registered EMail ID</label>
+              </span>
+
+              <span style="text-align: center; height:10px">
+                <label *ngIf="showMsghrs" class="form-text">{{msghrs}}</label>
+              </span>
+              <div *ngIf="buttons">
+                <span style="text-align: center; height:10px">
+                  <a style="cursor:pointer;margin-left: 196px;" (click)="resetpwd('reset')"><span *ngIf="SubmitSpinner" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>ReSend OTP</a>
+                </span>
+              </div>
+            </div>
+            <div class="container-login100-form-btn">
+              <button class="login100-form-btn" style="background-color: #6EACAF !important" type="submit"
+                [disabled]="forgotPasswordOtpEntry.invalid"><span *ngIf="SubmitSpinner" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true">&nbsp;&nbsp;&nbsp;</span>Submit
+              </button>
+            </div>
+            <div class="text-center p-t-12">
+              <span class="txt1">
+              </span>
+              <a class="txt2" style="cursor: pointer;" (click)="newPassword('login')">
+                Back to Login
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto mt-4 mb-5" *ngIf="showSecurityPopUp">
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-body SecurityPopUp" style="padding: 3rem;">
+          <h3 class="SecurityPopUp_h3">Security question to update password</h3>
+          <h4 class="SecurityPopUp_h4">Please answer your security question according to your setting </h4>
+          <form #securityquestionform="ngForm" id="sqForm" (ngSubmit)="btnSecurityQuestion(securityquestionform.value)">
+            <div class="row mt-3">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="SecurityPopUp_label"> Security Question</label>
+                </div>
+              </div>
+
+              <div class="col-lg-8">
+                <div class="form-group">
+                  <label class="SecurityPopUp_label">{{showSecurityQuestion}}</label>
+                </div>
+              </div>
+
+            </div>
+            <div class="row mt-3">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="SecurityPopUp_label">Answer</label>
+                </div>
+              </div>
+
+              <div class="col-lg-8">
+                <div class="form-group">
+                  <input placeholder="Answer" required class="form-control form-control-line SecurityPopUp_input"
+                    name="Answer" [(ngModel)]="Answer" type="text" autocomplete="off" #SQA>
+                </div>
+              </div>
+
+            </div>
+            <div class="row mt-3">
+              <div class="col-lg-12" style="text-align: center;">
+                <button [disabled]="!securityquestionform.valid" class="btn  btn-primary mr-3 SecurityPopUp_continue"
+                  type="submit">Continue
+                </button>
+                <button class="btn btn-light SecurityPopUp_back" type="button"
+                  (click)="newPassword('login')">BacktoSignIn
+                </button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #submitAnswer>
+    <div class="modal-body text-center" *ngIf="show_submitPopup">
+      <h4 class="submit_h4">Do you want to submit your Answer?</h4>
+      <button class="btn mr-3 submit_Answer" type="button" (click)="btnsubmit_Answer()">Yes
+      </button>
+      <button class="btn btn-light decline_Answer" type="button" (click)="btndecline_Submit()">No
+      </button>
+    </div>
+    <div class="modal-body text-center" *ngIf="wrongAnswer_Alert">
+      <h4 class="submit_h4">{{Answer_error_msg}}</h4>
+    </div>
+  </ng-template>
+<div style="height: 200px; width: 10px ;" >
+  <ng-template #tellTheUserAboutConcurrentSession >
+    <div class="modal-header" style="background-color:#6EACAF;height: 3.5rem;padding: 1rem;">
+      <h5 class="modal-title" align="left" style="font-weight:bold ; color:white ; font-family:Poppins-bold;">Session Information</h5>
+    </div>
+    <div class="modal-body text-center"  >
+      <p style="font-family:Poppins-Regular;"> Your login session is already active now, would you like to continue here ?</p>
+      <!-- <button class="btn mr-3 submit_Answer" type="button" (click)="forceLogin('Yes')" *ngIf="loginSpinner==false">
+      </button> -->
+      <button class="btn submit_Answer" type="button"  (click)="forceLogin('Yes')" >
+        <span *ngIf="PopUpSpinner && show_SessionPopup;" class="spinner-border spinner-border-sm text-white"  role="status" aria-hidden="true"></span>
+        Yes
+      </button>
+      <!-- *ngIf="!loginSpinner" -->
+      &nbsp;&nbsp;
+      <button class="btn btn-light decline_Answer" type="button" (click)="forceLogin('No');">No
+      </button>
+    <!-- </div>
+    <div> -->
+    <p style="color:rgb(201, 101, 106);margin-top: 10px;margin-bottom: 0rem;" align="center"> <strong style="color:black;">Note :</strong> Clicking <span style="color:#6EACAF;font-weight: bold;">Yes</span> will terminate that active session ! </p>
+  </div>
+  </ng-template>
+</div>
+
+  <footer class="air__layout__footer">
+    <div class="air__footer">
+      <div class="air__footer__inner">
+        <div class="row">
+          <div class="col-md-12">
+            <p>
+              © <span id="year">{{getFullYear()}}</span> SolvEdge Inc. | All Rights Reserved
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+  <script src="vendor/bootstrap/js/popper.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="vendor/select2/select2.min.js"></script>
+  <script src="vendor/tilt/tilt.jquery.min.js"></script>
+  <script>
+    $('.js-tilt').tilt({
+      scale: 1.1
+    })
+  </script>
+  <!-- <div id="myModal" #browserdetail class="modal fade bd-example-modal-lg">
+  <div class="modal-dialog modal-lg">
+     <div class="modal-content">
+      
+         <div class="modal-body">
+         <p style="color: #000000;"><b>The DC portal is best viewed with the following browser versions:</b></p>
+         <ul>
+           <li>Firefox 40 and above</li>
+           <li>Safari 11 and above</li>
+           <li>Chrome 46 and above</li>
+           <li>Microsoft Edge 19 and above</li>
+         </ul>
+
+         <br>
+
+         <p style="color: #000000;"><b>Starting September 13, 2021, you will not be able to access the DC using the following web browsers:</b></p>
+
+         <ul>
+           <li>All Internet Explorer versions (IE 11)</li>
+           <li>Safari 6 / iOS 6.0.1</li>
+           <li>Safari 7 / iOS 7.1</li>
+           <li>Safari 7 / OS X 10.9</li>
+           <li>Safari 8 / iOS 8.4</li>
+           <li>Safari 8 / OS X 10.10</li>
+         </ul>
+         </div>
+         </div>
+         </div>
+         </div>
+          -->
+  <script src="js/main.js"></script>
+</body>
+
+login.scss
+
+.tooltip2{
+  position: relative;
+  display: inline-block;
+}
+.list{
+list-style-type: disc;
+}
+.passwordHint{
+  color: black;font-family: system-ui;line-height: 1.2 !important;
+}
+.cancel_btn,.save_btn{font-weight: bold;box-shadow: 0px 8px 15px rgba(0, 0, 0, 1.0);
+}
+.cancel_btn{color: #fff !important;background-color: #c9656a !important; border-color: #c9656a !important;}
+.tooltiptext2{
+  visibility: hidden;
+  width: 300px;
+  background-color: #E6E6E6;
+  color: black;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  top: -62px;
+  left:100%;
+}
+.tooltiptext2 ::after{
+  content: "";
+  position: absolute;
+  top:50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #E6E6E6 transparent transparent;
+}
+.tooltiptext2.shown{
+  visibility:visible;
+}
+a:hover {
+  text-decoration: none !important;
+  color: #6EACAF !important;
+}
+.txt2{
+  color: #666666 !important;
+}
+.kt-grid {
+  cursor: context-menu;
+}
+.kt-login.kt-login--v1 .kt-login__aside {
+  width: 605px;
+  padding: 3rem 3.5rem;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.kt-login.kt-login--v1 .kt-login__aside .kt-login__logo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.kt-login.kt-login--v1 .kt-login__aside .kt-login__title {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 500;
+}
+.kt-login.kt-login--v1 .kt-login__aside .kt-login__subtitle {
+  font-size: 1.2rem;
+  font-weight: 200;
+  margin: 2.5rem 0 3.5rem 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+.kt-login.kt-login--v1 .kt-login__aside .kt-login__info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.kt-login.kt-login--v1 .kt-login__aside .kt-login__info .kt-login__menu > a {
+  text-decoration: none;
+  color: #fff;
+  margin-right: 2rem;
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.7);
+}
+.kt-login.kt-login--v1
+  .kt-login__aside
+  .kt-login__info
+  .kt-login__menu
+  > a:hover {
+  color: #fff;
+}
+.kt-login.kt-login--v1
+  .kt-login__aside
+  .kt-login__info
+  .kt-login__menu
+  > a:hover:after {
+  border-bottom: 1px solid #fff;
+  opacity: 0.3;
+}
+.kt-login.kt-login--v1
+  .kt-login__aside
+  .kt-login__info
+  .kt-login__menu
+  > a:last-child {
+  margin-right: 0;
+}
+.kt-login.kt-login--v1 .kt-login__aside .kt-login__info .kt-login__copyright {
+  color: rgba(255, 255, 255, 0.4);
+}
+.kt-login.kt-login--v1 .kt-login__wrapper {
+  padding: 3rem 3rem;
+  background: #fff;
+}
+.kt-login.kt-login--v1 .kt-login__wrapper .kt-login__head {
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: right;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__head
+  .kt-login__signup-label {
+  color: #74788d;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__head
+  .kt-login__signup-link {
+  color: #22b9ff;
+}
+.kt-login.kt-login--v1 .kt-login__wrapper .kt-login__body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 100%;
+}
+.kt-login.kt-login--v1 .kt-login__wrapper .kt-login__body .kt-login__form {
+  width: 100%;
+  max-width: 450px;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__title {
+  display: block;
+  text-align: center;
+  margin-bottom: 5rem;
+  text-decoration: none;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__title
+  > h3 {
+  font-size: 2rem;
+  color: #67666e;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-form {
+  margin: 4rem auto;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-form
+  .form-group {
+  margin: 0;
+  padding: 0;
+  margin: 0 auto;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-form
+  .form-group
+  .form-control {
+  border: none;
+  height: 50px;
+  margin-top: 1.25rem;
+  background-color: rgba(247, 247, 249, 0.7);
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  -webkit-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-form
+  .form-group
+  .form-control:focus {
+  -webkit-transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease;
+  background-color: #f7f7f9;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin: 1rem 0;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__actions
+  .kt-login__link-forgot {
+  font-weight: 400;
+  color: #74788d;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__actions
+  .kt-login__link-forgot:hover {
+  color: #22b9ff;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__actions
+  .kt-login__link-forgot:hover:after {
+  border-bottom: 1px solid #22b9ff;
+  opacity: 0.3;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__actions
+  .kt-login__btn-primary,
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__actions
+  .kt-login__btn-secondary {
+  font-weight: 500;
+  font-size: 1rem;
+  height: 50px;
+  padding-left: 2.75rem;
+  padding-right: 2.75rem;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__divider {
+  margin: 1rem 0 2rem 0;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__divider:not(:first-child):not(:last-child) {
+  font-weight: 400;
+  color: #b5b2c3;
+  font-size: 1rem;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__options {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  max-width: 100%;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__options
+  > a {
+  text-decoration: none;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.kt-login.kt-login--v1
+  .kt-login__wrapper
+  .kt-login__body
+  .kt-login__form
+  .kt-login__options
+  > a:not(:last-child) {
+  margin: 0 1.5rem 0 0;
+}
+
+@media (min-width: 1025px) {
+  .kt-login.kt-login--v1 .kt-login__aside {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+  .kt-grid.kt-grid--ver-desktop.kt-grid--desktop > .kt-grid__item {
+    max-width: 100%;
+    height: 100vh;
+  }
+}
+@media (max-width: 1024px) {
+  .kt-login.kt-login--v1 .kt-login__aside {
+    width: 100%;
+    height: auto;
+    padding: 2rem 1.5rem;
+  }
+ 
+  .kt-login.kt-login--v1 .kt-login__aside .kt-login__logo {
+    margin-bottom: 2.5rem;
+  }
+  .kt-login.kt-login--v1 .kt-login__aside .kt-login__info {
+    margin-top: 2rem;
+  }
+  .kt-login.kt-login--v1 .kt-login__aside .kt-login__subtitle {
+    margin: 2rem 0;
+  }
+  .kt-login.kt-login--v1 .kt-login__wrapper {
+    padding: 3rem 1.5rem;
+  }
+  .kt-login.kt-login--v1 .kt-login__wrapper .kt-login__head {
+    padding-left: 2rem;
+    right: 2rem;
+  }
+  .kt-login.kt-login--v1 .kt-login__wrapper .kt-login__body {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-top: 5rem;
+  }
+  .kt-login.kt-login--v1
+    .kt-login__wrapper
+    .kt-login__body
+    .kt-login__form
+    .kt-login__options
+    > a:not(:first-child):not(:last-child) {
+    margin: 0 0.8rem;
+  }
+}
+.kt-link {
+  cursor: pointer;
+}
+.open-close-eye {
+  float: right;
+  position: relative;
+  z-index: 1;
+  left: -25px;
+  top: -34px;
+  color: #7b7b7b;
+  cursor: pointer;
+}
+.errorlab {
+  height: 10px;
+}
+.store {
+  height: 55px;
+}
+.form-text, .text-danger {
+  color:#c9656a !important;
+  font-size: 11px;
+}
+.password-validaition-before{
+  color:#c9656a !important;
+}
+.password-validaition-after{
+  color:#6EACAF !important;
+}
+.SecurityPopUp{
+  .SecurityPopUp_h3{
+    text-align: center;font-weight: bold;color: black;font-family: sans-serif;
+  }
+  .SecurityPopUp_h4{
+    text-align: center;padding: 20px;color: black;font-family: sans-serif;
+  }
+  .SecurityPopUp_label{
+    text-align: center;color: black;font-family:sans-serif;font-size: 18px;font-weight: bold;
+  }
+  .SecurityPopUp_input{
+    position: relative;bottom:10px;font-family:sans-serif;
+  }
+  .SecurityPopUp_continue{
+    background-color: #6EACAF !important; border-color: #6EACAF !important;
+  }
+  .SecurityPopUp_back{
+    background-color:rgb(201,101,106) !important; border-color:rgb(201, 101, 106);color:#fff;
+  }
+}
+.submit_Answer{
+  background-color: #6EACAF !important; border-color: #6EACAF !important;color: #fff !important;
+}
+.decline_Answer{
+  background-color:rgb(201,101,106) !important; border-color:rgb(201, 101, 106);color:#fff !important;
+}
+.submit_h4{
+  text-align: center;padding: 10px;color: black;font-family: sans-serif;
+}
+
+#Captcha_Image{
+  border-width:0px;
+  margin:0.5rem 0.5rem 0.5rem 0.5rem;
+  padding:0px 10px 0px 10px;
+  width: 185px;
+  opacity: 0.6
+}
+
+
+login.ts
+
+import { Component, OnInit, HostListener, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserService } from '../shared/services/user.service';
+import { Errors } from '../shared/models/error.model';
+import { environment } from '../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
+import { BsModalService, BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss', './style.bundle.css']
+})
+
+export class LoginComponent implements OnInit {
+  @ViewChild('childModal', {}) childModal: ModalDirective;
+  constructor(private router: Router, private userService: UserService,
+    private toast: ToastrService, private modalService: BsModalService) { }
+
+  resetPWD: boolean = false;
+  copyRight: number = new Date().getFullYear();
+  loginform: boolean = true;
+  userName: string = "";
+  password: string = "";
+  userid: any;
+  errors: any;
+  imageChange: any;
+  errorMsg: string = "";
+  error_msg: boolean = false;
+  mask: boolean = true;
+  browserName = '';
+  browserVersion = '';
+  usersessionresponse: any;
+  modelRefSession: BsModalRef;
+  loginSpinner: any;
+  PopUpSpinner: any;
+  SubmitSpinner: any;
+  click:any;
+  show_SessionPopup: any
+  ngOnInit() {
+
+    this.loginSpinner = false;
+    this.PopUpSpinner = false;
+    this.SubmitSpinner = false;
+    this.click=false
+  }
+
+  capslockOn;
+  @HostListener('window:click', ['$event']) onClick(event) {
+    this.getcapsfun(event);
+  }
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event) {
+    this.getcapsfun(event)
+  }
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(event) {
+    if (event.getModifierState && event.getModifierState('CapsLock')) {
+      this.capslockOn = true;
+    } else {
+      this.capslockOn = false;
+    }
+  }
+  resetpwd(e) {
+    if (e == 'reset') {
+      this.resetPWD = true;
+      this.showMsghrs = false;
+      this.enterNewPassword = false;
+      this.capcha = false;
+      this.otpNumber = false;
+      this.buttons = false
+      this.forgotPasswordOtp = false;
+      this.showSecurityPopUp = false;
+      this.showLoginForm = true;
+
+    }
+    else if (e == 'login') {
+      this.resetPWD = false;
+      this.capcha = false;
+      this.enterNewPassword = false;
+    }
+  }
+  eyemask() {
+    var pw = document.getElementsByClassName("input100 input-password")[0];
+    var em = document.getElementById("eyemask");
+    if (this.mask === true) {
+      this.mask = false;
+      pw.setAttribute("type", "text");
+      em.setAttribute("class", "fa fa-eye open-close-eye");
+    } else {
+      this.mask = true;
+      pw.setAttribute("type", "password");
+      em.setAttribute("class", "fa fa-eye-slash open-close-eye");
+    }
+  };
+  mask1;
+  eyemask1() {
+    var pw = document.getElementsByClassName("input100 input-password 12")[0];
+    var em = document.getElementById("eyemask1");
+    if (this.mask1 === true) {
+      this.mask1 = false;
+      pw.setAttribute("type", "text");
+      em.setAttribute("class", "fa fa-eye open-close-eye");
+    } else {
+      this.mask1 = true;
+      pw.setAttribute("type", "password");
+      em.setAttribute("class", "fa fa-eye-slash open-close-eye");
+    }
+  };
+  btnLogin() {
+    this.SubmitSpinner = true;
+    this.errors = new Errors();
+    const credentials = {
+      'username': this.userName,
+      'password': this.password
+    }
+    const authenticate = this.userService.encrypt(credentials);
+    if (authenticate) {
+      this.userService
+        .attemptAuth(authenticate)
+        .subscribe(
+          data => {
+            this.SubmitSpinner = false;
+            this.userid = data;
+
+            if (this.userid.spf == null) {
+              this.userid.spf = false;
+            }
+            if (this.userid.question && this.userid.spf && !this.userid.csrFlag) {
+              if (this.userid.approle === "ADMIN") {
+                this.router.navigate(['/admin/admindashboard']);
+              }
+              if (this.userid.approle === "CLIENT") {
+                this.router.navigate(['/client/clientdashboard/clientdashboardview']);
+
+              } else if (this.userid.approle === "CUSTOMER") {
+                this.router.navigate(['/customer']);
+              }
+            }
+            else {
+              if (this.userid.clientid === 104 && !this.userid.spf) {
+                this.router.navigate(['/SPSsecurity']);
+              }
+              else if (this.userid.csrFlag) {
+                this.router.navigate(['/csr-security']);
+              }
+              else {
+                this.router.navigate(['/updateSecurityQuestion']);
+              }
+
+            }
+
+          },
+          err => {
+            const errorLog = this.userService.decrypt(err)
+            this.errors = err;
+            if (errorLog.error == "your account is blocked") {
+              this.errorMsg = "your account is blocked";
+              this.error_msg = true
+            }
+            else {
+              this.errorMsg = errorLog.error;
+              this.error_msg = true
+            }
+          });
+
+      this.userService.changeOnboard(credentials);
+    }
+    else {
+      this.SubmitSpinner = false;
+    }
+
+  }
+
+
+  forgot() {
+    this.loginform = false;
+  }
+  getcapsfun(e) {
+    if (e.getModifierState && e.getModifierState('CapsLock')) {
+      this.capslockOn = true;
+    } else {
+      this.capslockOn = false;
+    }
+  }
+  login() {
+    this.loginform = true;
+  }
+  forgotPasswordData = {
+    'username': "",
+    "captchacode": "",
+    "newPassword": "",
+    "confirmPassword": ""
+  }
+  capcha: boolean = false;
+  enterNewPassword: boolean = false;
+  newPassword(e) {
+    if (e == 'Username') {
+      this.click=true;
+      this.resetPWD = false;
+      this.enterNewPassword = false;
+      this.capcha = true;
+      this.buttons = false
+      this.otpNumber = false;
+      this.forgotPasswordOtp = false;
+      this.showSecurityPopUp = false;
+      this.showLoginForm = true;
+    }
+    if (e == 'Otp') {
+      this.click=false
+      this.resetPWD = false;
+      this.enterNewPassword = false;
+      this.capcha = false;
+      this.otpNumber = false;
+      this.buttons = false
+      this.forgotPasswordOtp = true;
+      this.showSecurityPopUp = false;
+      this.showLoginForm = true;
+    }
+    if (e == 'capcha') {
+      this.resetPWD = false;
+      this.click=false
+      this.enterNewPassword = true;
+      this.capcha = false;
+      this.otpNumber = false;
+      this.buttons = false
+      this.forgotPasswordOtp = false;
+      this.showSecurityPopUp = false;
+      this.showLoginForm = true;
+    }
+    if (e == 'security') {
+      this.resetPWD = false;
+      this.click=false
+      this.enterNewPassword = false;
+      this.capcha = false;
+      this.otpNumber = false;
+      this.buttons = false
+      this.forgotPasswordOtp = false;
+      this.showSecurityPopUp = true;
+      this.showLoginForm = false;
+    }
+    if (e == 'login') {
+      this.showLoginForm = true;
+      this.resetPWD = false;
+      this.click=false
+      this.enterNewPassword = false;
+      this.capcha = false;
+      this.buttons = false
+      this.showSecurityPopUp = false;
+      this.user_ErrorMsg = false;
+      this.captcha_ErrorMsg = false;
+      this.password_ErrorMsg = false;
+      this.passkey = false;
+      this.passkey1 = false;
+      this.passkey2 = false;
+      this.passkey3 = false;
+      this.passkey4 = false;
+      this.passval = false;
+      this.passval1 = false;
+      this.passval2 = false;
+      this.passval3 = false;
+      this.passval4 = false;
+      this.otpNumber = false;
+      this.forgotPasswordOtp = false;
+      this.error_msg = false;
+      this.otpNumber_ErrorMsg = false;
+      this.forgotOtpNumber_ErrorMsg = false;
+      this.forgotPasswordData = {
+        'username': "",
+        "captchacode": "",
+        "newPassword": "",
+        "confirmPassword": ""
+      }
+      this.showSecurityQuestion = ""
+      this.answerVerfication = {
+        'username': '',
+      }
+      this.wrongAnswer_Alert = false;
+      this.show_submitPopup = true;
+      this.showMsg24hrs = false;
+    }
+  }
+  validation: any;
+  userErrorMsg = "Username does not Exist";
+  user_ErrorMsg: boolean = false;
+  captchaImage: any;
+  forgotOtp: any;
+  UsernameSQ = {
+    username: ''
+  };
+  btnGetUserName(value, userNameEntry) {
+    this.SubmitSpinner = true;
+    this.click=true
+    this.imageChange = '';
+    var username = {
+      "username": value.Username
+    }
+    const usernameJson = this.userService.encrypt(username)
+    if (usernameJson) {
+      this.userService.getUsername(usernameJson).subscribe(data => {
+this.click=true
+        this.validation = data;
+
+        if (this.validation == "valid" ||"not valid ") {
+          var usernameotp = {
+            "username": value.Username
+          }
+          const usernameOTPJson = this.userService.encrypt(usernameotp)
+          if (usernameOTPJson) {
+            this.userService.getForgetPasswordOtp(usernameOTPJson).subscribe(data => {
+              this.SubmitSpinner = false;
+              this.click=true
+              this.forgotOtp = data;
+              
+              this.user_ErrorMsg = false;
+              if (this.forgotOtp) {
+                this.newPassword('Otp')
+                this.UsernameSQ.username = value.Username
+                this.answerVerfication.username = value.Username
+                localStorage.setItem('image',this.forgotOtp.authAccess)
+              } 
+              else {
+                // this.userService.getcaptcha().subscribe(data => {
+                //   this.captchaImage = data;
+                //   this.imageChange=this.captchaImage.base64
+                //   this.forgotOtpNumber_ErrorMsg=false;
+                //   this.newPassword('Username')
+                // })
+                // console.log("ELSESEFSFuifahfjahfkj")
+                this.forgotOtpNumber_ErrorMsg = false;
+                this.newPassword('capcha')
+              }
+            })
+          }
+        } else if (this.validation == "Account is already blocked") {
+          
+          this.SubmitSpinner = false;
+          this.user_ErrorMsg = true;
+          this.userErrorMsg = "Account is locked. Please Inform your administrator to unlocked it.";
+        }
+        else {
+          
+          this.SubmitSpinner = false;
+          this.user_ErrorMsg = true;
+          // this.userErrorMsg = "User Access Prohibited";
+        }
+      })
+    }
+    
+  }
+  spinnerOff: boolean = true;
+  hideLoader() {
+    this.spinnerOff = false;
+  }
+  tryOtherImage() {
+    this.imageChange = '';
+    this.captcha_ErrorMsg = false;
+    this.userService.getcaptcha().subscribe(data => {
+      this.captchaImage = data;
+      this.imageChange = this.captchaImage.base64;
+    });
+  }
+  captchaValidation;
+  captchaErrorMsg = "captcha code mismatch";
+  captcha_ErrorMsg: boolean = false;
+  btnGetcapchaCode(value, capchaCodeEntry) {
+    this.SubmitSpinner = true;
+    var capcha = {
+      "imagecaptcha": this.captchaImage.captcha,
+      "usercaptcha": value.capchaCode
+    }
+    this.userService.getCaptchaValidation(capcha).subscribe(data => {
+      this.SubmitSpinner = false;
+      this.captchaValidation = data;
+      if (this.captchaValidation == "verified") {
+        this.captcha_ErrorMsg = false;
+        this.newPassword('capcha')
+      }
+      else {
+        this.captcha_ErrorMsg = true;
+      }
+    })
+  }
+  passwordErrorMsg = "Password mismatch";
+  password_ErrorMsg: boolean = false;
+  passwordChanged;
+  msg24hrs: string;
+  showMsg24hrs: boolean = false;
+  btnGetNewPasswordDetails(value, newPasswordDetails) {
+    this.SubmitSpinner = true;
+    if (value.newPasswordData == value.confirmPassword) {
+      var details = {
+        "username": this.forgotPasswordData.username,
+        "password": value.newPasswordData,
+        "authAccess":localStorage.getItem('image')
+      }
+      const detailsJson = this.userService.encrypt(details)
+      if (detailsJson) {
+        this.userService.changePassword(detailsJson).subscribe(data => {
+          this.SubmitSpinner = false;
+          this.passwordChanged = data;
+          if (this.passwordChanged === "you can't change password within 24hrs") {
+            this.msg24hrs = "You can't change the password now. Please wait for 24Hrs from the recent password change.";
+            this.showMsg24hrs = true;
+            setTimeout(() => {
+              this.showMsg24hrs = false;
+            }, 3000);
+          }
+          else if (this.passwordChanged.error === "password already exist.change the password") {
+            this.msg24hrs = "Please don't use any of your old password.";
+            this.showMsg24hrs = true;
+            setTimeout(() => {
+              this.showMsg24hrs = false;
+            }, 3000);
+          }
+          else if (this.passwordChanged == "you can't use this password") {
+            this.msg24hrs = "Your password standard is too weak. Please use strong standard password.";
+            this.showMsg24hrs = true;
+            setTimeout(() => {
+              this.showMsg24hrs = false;
+            }, 3000);
+
+          }
+          else if (this.passwordChanged === "done") {
+            this.toast.success('Password Changed', '', { progressBar: true });
+            this.password_ErrorMsg = false;
+            localStorage.removeItem('image')
+            setTimeout(() => {
+              this.newPassword('login')
+            }, 3000);
+          }
+
+          else {
+
+            this.toast.error('Password not Changed. Please try again', '', { progressBar: true });
+            this.newPassword('login')
+          }
+        })
+      }
+    }
+    else {
+      this.SubmitSpinner = false;
+      this.password_ErrorMsg = true;
+    }
+  }
+  password_Verification = "Please create a password per the requirements below"
+  focus(event, id) {
+
+    if (event) {
+      $(`#${id}`).addClass('shown')
+    }
+  }
+  outfocus(event, id) {
+    if (event) {
+      $(`#${id}`).removeClass('shown')
+    }
+  }
+  passkey: boolean = false;
+  passkey1: boolean = false;
+  passkey2: boolean = false;
+  passkey3: boolean = false;
+  passkey4: boolean = false;
+  onKey1(event: any) {
+    var lowerCaseLetters = /[a-z]/g;
+    var upperCaseLetters = /[A-Z]/g;
+    var numbers = /[0-9]/g;
+    var special = /[#$^!*()@%&]/g;
+    if (event.target.value.match(lowerCaseLetters)) {
+      this.passkey = true;
+    }
+    else {
+      this.passkey = false;
+    }
+    if (event.target.value.match(upperCaseLetters)) {
+      this.passkey1 = true;
+    }
+    else {
+      this.passkey1 = false;
+    }
+    if (event.target.value.match(numbers)) {
+      this.passkey2 = true;
+    }
+    else {
+      this.passkey2 = false;
+    }
+    if (event.target.value.length >= 8) {
+      this.passkey3 = true;
+    }
+    else {
+      this.passkey3 = false;
+    }
+    if (event.target.value.match(special)) {
+      this.passkey4 = true;
+    }
+    else {
+      this.passkey4 = false;
+    }
+  }
+  passval: boolean = false;
+  passval1: boolean = false;
+  passval2: boolean = false;
+  passval3: boolean = false;
+  passval4: boolean = false;
+  onKey2(event: any) {
+    var lowerCaseLetters = /[a-z]/g;
+    var upperCaseLetters = /[A-Z]/g;
+    var numbers = /[0-9]/g;
+    var special = /[#$^!*()@%&]/g;
+    if (event.target.value.match(lowerCaseLetters)) {
+      this.passval = true;
+    }
+    else {
+      this.passval = false;
+    }
+    if (event.target.value.match(upperCaseLetters)) {
+      this.passval1 = true;
+    }
+    else {
+      this.passval1 = false;
+    }
+    if (event.target.value.match(numbers)) {
+      this.passval2 = true;
+    }
+    else {
+      this.passval2 = false;
+    }
+    if (event.target.value.length >= 8) {
+      this.passval3 = true;
+    }
+    else {
+      this.passval3 = false;
+    }
+    if (event.target.value.match(special)) {
+      this.passval4 = true;
+    }
+    else {
+      this.passval4 = false;
+    }
+  }
+
+  buttons: boolean = false;
+  msghrs: string
+  showMsghrs: boolean = false;
+  OtpNumber_ErrorMsg: boolean = false;
+  forgotPasswordOtp: boolean = false;
+  forgotOtpNumber_ErrorMsg: boolean = false;
+  questions: any;
+  questionsId: any;
+  btnForgotOtpNumber(value, val) {
+    this.SubmitSpinner = true;
+    var test = {
+      "username": this.forgotPasswordData.username,
+      "otpvalue": value.forgotOtpNumbervalue,
+      "authAccess": localStorage.getItem('image')
+      
+    }
+    const verifyOtp = this.userService.encrypt(test)
+    if (verifyOtp) {
+      this.userService.otpexpiregeneration(verifyOtp).subscribe(data => {
+        this.SubmitSpinner = false;
+        this.captchaImage = data;
+        if (this.captchaImage === "You have entered an invalid OTP. You have 4 attempt(s) before your account get locked.") {
+          this.msghrs = "You have entered an invalid OTP. You have 4 attempt(s) before your account get locked.";
+          this.showMsghrs = true;
+          this.buttons = false;
+          document.forms["forgotPasswordOtpEntryForm"].reset();
+        }
+        else if (this.captchaImage === "You have entered an invalid OTP. You have 3 attempt(s) before your account get locked.") {
+          this.msghrs = "You have entered an invalid OTP. You have 3 attempt(s) before your account get locked.";
+          this.showMsghrs = true;
+          this.buttons = false;
+          document.forms["forgotPasswordOtpEntryForm"].reset();
+        }
+        else if (this.captchaImage === "You have entered an invalid OTP. You have 2 attempt(s) before your account get locked.") {
+          this.msghrs = "You have entered an invalid OTP. You have 2 attempt(s) before your account get locked.";
+          this.showMsghrs = true;
+          this.buttons = false;
+          document.forms["forgotPasswordOtpEntryForm"].reset();
+        }
+        else if (this.captchaImage === "You have entered an invalid OTP. You have 1 attempt(s) before your account get locked.") {
+          this.msghrs = "You have entered an invalid OTP. You have 1 attempt(s) before your account get locked.";
+          this.showMsghrs = true;
+          this.buttons = false;
+          document.forms["forgotPasswordOtpEntryForm"].reset();
+        }
+        else if (this.captchaImage === "Your account has been locked. Please email patientcare@myrecoverycoach.com or call (833) 419-2509 to unlock it.") {
+          this.msghrs = "Account is locked. Please Inform your administrator to unlocked it.";
+          this.showMsghrs = true;
+          this.buttons = false;
+          setTimeout(() => {
+            this.newPassword('login')
+          }, 4000);
+          document.forms["forgotPasswordOtpEntryForm"].reset();
+        }
+        else if (this.captchaImage === "you are otp is expired") {
+          this.msghrs = "otp is expired.";
+          this.showMsghrs = true;
+          this.buttons = false;
+          setTimeout(() => {
+            this.resetpwd('reset')
+          }, 3000);
+          document.forms["forgotPasswordOtpEntryForm"].reset();
+        }
+        else if (this.captchaImage === "SyncFailed ! otp error try again after sometime") {
+          this.toast.warning("Something is Wrong. Please try again..", " ", {});
+          this.msghrs = "";
+          this.showMsghrs = true;
+          this.buttons = false;
+          setTimeout(() => {
+            this.resetpwd('reset')
+          }, 3000);
+          document.forms["forgotPasswordOtpEntryForm"].reset();
+        }
+        else if (this.captchaImage === "otp error try again after sometime") {
+          this.toast.warning("Something is Wrong. Please try again..", " ", {});
+          this.msghrs = "";
+          this.showMsghrs = true;
+          this.buttons = false;
+          setTimeout(() => {
+            this.resetpwd('reset')
+          }, 3000);
+          document.forms["forgotPasswordOtpEntryForm"].reset();
+        }
+        else if (this.captchaImage.msg === "Success") {
+          const usernameSQJson = this.userService.encrypt(this.UsernameSQ)
+          if (usernameSQJson) {
+            this.userService.getSecurityQuestion(usernameSQJson).subscribe(data => {
+              this.questions = data;
+              this.otpNumber_ErrorMsg = false;
+              var randomQuestion = Math.floor(Math.random() * this.questions.length);
+              this.showSecurityQuestion = this.questions[randomQuestion].questioname
+              this.questionsId = this.questions[randomQuestion].questionid
+              this.newPassword('security')
+              document.forms["forgotPasswordOtpEntryForm"].reset();
+            })
+          }
+        }
+      })
+    }
+    document.forms["forgotPasswordOtpEntryForm"].reset();
+  }
+  msgView: boolean = true;
+  otpNumber: boolean = false;
+  otpNumber_ErrorMsg: boolean = false;
+  otpNumberErrorMsg = "OTP Number Not Valid"
+  getOtpNumber: any;
+  ErrorMsg(value) {
+    if (!value) {
+      if (this.error_msg) {
+        this.msgView = false;
+      }
+      else {
+        this.msgView = true;
+      }
+    }
+  }
+  show: boolean = false;
+  captcha_Field = "";
+  userSessionStatus: any;
+
+
+
+  btnTwoStepVerification() {
+    this.msgView = false;
+    const postOtpdetails = {
+      "username": this.userName,
+      "password": this.password,
+      "captcha": this.captcha_Field
+    }
+
+    if (!this.userName && !this.password) {
+      this.errorMsg = "Username and Password is Empty";
+      this.error_msg = true
+      setTimeout(() => {
+        this.error_msg = false;
+      }, 3000);
+    }
+    else if (!this.userName) {
+      this.errorMsg = "Username is Empty";
+      this.error_msg = true
+      setTimeout(() => {
+        this.error_msg = false;
+      }, 3000);
+    }
+    else if (!this.password) {
+      this.errorMsg = "Password is Empty";
+      this.error_msg = true
+      setTimeout(() => {
+        this.error_msg = false;
+      }, 3000);
+    }
+    else if (!this.captcha_Field && this.enable_CaptchaField) {
+      this.errorMsg = "Captcha Field is Empty";
+      this.error_msg = true
+      setTimeout(() => {
+        this.error_msg = false;
+      }, 3000);
+    }
+    else {
+      const NewIP = this.userService.encrypt(postOtpdetails)
+      if (NewIP) {
+        this.userService.otpGeneration(NewIP).subscribe(data => {
+          this.loginSpinner = false;
+          if (this.modelRefSession) {
+            this.modelRefSession.hide()
+          }
+          this.getOtpNumber = data;
+          if (this.getOtpNumber == "You are entering the wrong Captcha") {
+            this.recall_Captcha(this.userName);
+            this.errorMsg = "You've entered the characters incorrectly. Please try again";
+            this.error_msg = true
+            this.captcha_Field = "";
+            setTimeout(() => {
+              this.error_msg = false;
+            }, 3000);
+          }
+          else if (this.getOtpNumber == 'You have entered the characters incorrectly and have 4 more attempts. Click the "refresh" icon next to the image above to get new characters.') {
+            this.errorMsg = 'You have entered the characters incorrectly and have 4 more attempts. Click the "refresh" icon next to the image above to get new characters.'
+            this.error_msg = true
+            this.recall_Captcha(this.userName);
+            
+            this.captcha_Field = "";
+            setTimeout(() => {
+              this.error_msg = false;
+            }, 3000);
+          }
+          else if (this.getOtpNumber == 'You have entered the characters incorrectly and have 3 more attempts. Click the "refresh" icon next to the image above to get new characters.') {
+            this.errorMsg ='You have entered the characters incorrectly and have 3 more attempts. Click the "refresh" icon next to the image above to get new characters.'
+            this.error_msg = true
+            this.recall_Captcha(this.userName);
+           
+            this.captcha_Field = "";
+            setTimeout(() => {
+              this.error_msg = false;
+            }, 3000);
+          }
+          else if (this.getOtpNumber == 'You have entered the characters incorrectly and have 2 more attempts. Click the "refresh" icon next to the image above to get new characters.') {
+            this.errorMsg ='You have entered the characters incorrectly and have 2 more attempts. Click the "refresh" icon next to the image above to get new characters.'
+            this.error_msg = true
+            this.recall_Captcha(this.userName);
+            this.captcha_Field = "";
+            setTimeout(() => {
+              this.error_msg = false;
+            }, 3000);
+          }
+          else if (this.getOtpNumber == 'You have entered the characters incorrectly and have 1 more attempt before your account will be locked. Click the "refresh" icon next to the image above to get new characters.') {
+            this.errorMsg = 'You have entered the characters incorrectly and have 1 more attempt before your account will be locked. Click the "refresh" icon next to the image above to get new characters.'
+            this.error_msg = true
+            this.recall_Captcha(this.userName);
+            this.captcha_Field = "";
+            setTimeout(() => {
+              this.error_msg = false;
+            }, 3000);
+          }
+          else if (this.getOtpNumber == 'You account is locked. Please contact customer support to reset your account.') {
+            this.errorMsg ='You account is locked. Please contact customer support to reset your account.'
+            this.error_msg = true
+            this.recall_Captcha(this.userName);
+            this.captcha_Field = "";
+            setTimeout(() => {
+              this.error_msg = false;
+            }, 3000);
+          }
+          else if (this.getOtpNumber == "Your Account is blocked.") {
+            this.errorMsg = "Your Account is Blocked";
+            this.error_msg = true
+          }
+          else if (this.getOtpNumber == "sync Failed") {
+            this.errorMsg = "Your Account is Blocked";
+            this.error_msg = true
+          }
+          else if (this.getOtpNumber.base64) {
+            this.img_Captcha = 'data:image/png;base64,' + data.base64
+            this.enable_CaptchaField = true;
+          }
+          else if (this.getOtpNumber.pwdFlag) {
+            this.resetpwd('reset')
+          }
+          else if (this.getOtpNumber.domainflag) {
+            this.otpNumber = true;
+          }
+          else {
+            this.btnLogin();
+          }
+        },
+          err1 => {
+            const errorLog = this.userService.decrypt(err1.error)
+            if (errorLog) {
+              if (this.modelRefSession) {
+                this.modelRefSession.hide()
+              }
+              this.loginSpinner = false;
+              var messageJson = errorLog;
+              if (messageJson.error == "your account is blocked") {
+                this.errorMsg = "Account is locked. Please Inform your administrator to unlocked it.";
+                this.error_msg = true
+              }
+              else if (messageJson.error == "Account is Expired.please fix new newpassword") {
+                this.errorMsg = "Account is expired, Please fix new password";
+                this.error_msg = true
+              }
+              else if (messageJson.error == "Invalid password, Attempt count(1/3)") {
+                this.errorMsg = "Incorrect Password. You have two more attempts until your account becomes locked. Click on Forgot Password if you need to reset it.";
+                this.error_msg = true
+                setTimeout(() => {
+                  this.error_msg = false;
+                }, 4000);
+              }
+              else if (messageJson.error == "Invalid password, Attempt count(2/3)") {
+                this.errorMsg = "Incorrect Password. You have one more attempts until your account becomes locked. Click on Forgot Password if you need to reset it.";
+                this.error_msg = true
+                setTimeout(() => {
+                  this.error_msg = false;
+                }, 4000);
+              }
+              else if (messageJson.error == "Invalid password, Attempt count(3/3)") {
+                this.errorMsg = "Incorrect Password. You have last attempt until your account becomes locked. Click on Forgot Password if you need to reset it.";
+                this.error_msg = true
+                setTimeout(() => {
+                  this.error_msg = false;
+                }, 4000);
+              }
+              else {
+                this.errorMsg = messageJson.error;
+                this.error_msg = true
+                setTimeout(() => {
+                  this.error_msg = false;
+                }, 60000);
+              }
+
+            }
+
+          });
+      }
+    }
+  }
+
+
+  forceLogin(option: any) {
+    if (option === 'Yes') {
+      this.loginSpinner = true;
+      this.PopUpSpinner = true;
+      this.btnTwoStepVerification();
+
+    }
+    else if (option === 'No') {
+      this.loginSpinner = false;
+      if (this.modelRefSession) {
+        this.modelRefSession.hide()
+      }
+      this.show_SessionPopup = false;
+    }
+  }
+
+
+  @ViewChild('tellTheUserAboutConcurrentSession') templateRefSession: TemplateRef<any>;
+  getCurrentUserTokenStatus() {
+    var obj = {
+      "username": this.userName
+    }
+    this.loginSpinner = false;
+    this.PopUpSpinner = false;
+    this.show_SessionPopup = false;
+    const usernamEN = this.userService.encrypt(obj);
+    if (usernamEN) {
+      this.userService.Currentusersession(usernamEN).subscribe(data => {
+        this.usersessionresponse = data
+        const errorLog111111 = this.userService.decrypt(this.usersessionresponse)
+        if (errorLog111111.tokenStatus === true) {
+          if(errorLog111111.tokenStatus === true && !this.password && !this.capcha){
+            this.modelRefSession.hide();
+          }
+          else{
+            this.modelRefSession = this.modalService.show(this.templateRefSession, { ignoreBackdropClick: true });
+            this.show_SessionPopup = true;
+          } 
+        }
+        else {
+          this.loginSpinner = false;
+          this.btnTwoStepVerification();
+          if (this.modelRefSession) {
+            this.modelRefSession.hide()
+          }
+        }
+      })
+    }
+  }
+
+
+  btnOtpNumber(value, val) {
+    if (this.getOtpNumber.otp == value.otpNumbervalue) {
+      this.btnLogin();
+    } else {
+      this.otpNumber_ErrorMsg = true;
+    }
+  }
+
+  // security question functionality and code.....
+  showSecurityPopUp: boolean = false;
+  showLoginForm: boolean = true;
+  showSecurityQuestion = ""
+  wrongAnswer_Alert: boolean = false;
+  show_submitPopup: boolean = true;
+  answerVerfication = {
+    'username': '',
+  }
+
+  modalRef: BsModalRef;
+  @ViewChild('submitAnswer') templateRef: TemplateRef<any>;
+  @ViewChild('browserdetail') templateRef1: TemplateRef<any>;
+  btnSecurityQuestion(value) {
+    this.answerVerfication[`question`] = this.questionsId
+    this.answerVerfication[`answer`] = value.Answer
+    document.forms["sqForm"].reset();
+    this.modalRef = this.modalService.show(this.templateRef, { class: 'modal-md', ignoreBackdropClick: true });
+  }
+  Answer_error_msg: string;
+  btnsubmit_Answer() {
+    this.answerVerfication['authAccess'] = localStorage.getItem('image')
+    const answerVerficationJson = this.userService.encrypt(this.answerVerfication)
+    if (answerVerficationJson) {
+      this.userService.postSubmitted_Answer(answerVerficationJson).subscribe(data => {
+        var validate: boolean = data.value;
+        this.Answer_error_msg = data.msg;
+        if (validate) {
+          this.modalRef.hide();
+          this.newPassword('capcha');
+        }
+        else {
+          if (this.Answer_error_msg === "Your three attempt(s) already completed. Please contact to patientcare@myrecoverycoach.com or call (833) 419-2509.") {
+            this.Answer_error_msg = "Account is locked. Please Inform your administrator to unlocked it."
+            this.show_submitPopup = false;
+            this.wrongAnswer_Alert = true;
+            setTimeout(() => {
+              this.wrongAnswer_Alert = false;
+              this.show_submitPopup = true;
+              this.modalRef.hide();
+              this.newPassword('login');
+            }, 3000);
+          } else {
+            this.show_submitPopup = false;
+            this.wrongAnswer_Alert = true;
+            setTimeout(() => {
+              this.wrongAnswer_Alert = false;
+              this.show_submitPopup = true;
+              this.btndecline_Submit();
+            }, 3000);
+          }
+        }
+      })
+    }
+  }
+
+  btndecline_Submit() {
+    this.modalRef.hide();
+    var randomQuestionDecline = Math.floor(Math.random() * this.questions.length);
+    this.showSecurityQuestion = this.questions[randomQuestionDecline].questioname
+    this.questionsId = this.questions[randomQuestionDecline].questionid
+    var username = this.answerVerfication.username;
+    this.answerVerfication = {
+      'username': username
+    }
+  }
+
+  //captcha for SPS users.........
+  enable_CaptchaField: boolean = false;
+  img_Captcha = ""
+  pattern = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+  shownCaptcha(user) {
+    if (user && this.pattern.test(user)) {
+      var jsonCaptcha = {
+        "username": user
+      }
+      const checkUser = this.userService.encrypt(jsonCaptcha);
+      if (checkUser) {
+        this.userService.user_Captcha(checkUser).subscribe(res => {
+          if (res == "captcha is required for this user") {
+            this.userService.get_Captcha(checkUser).subscribe(data => {
+              if (data.base64) {
+                this.img_Captcha = 'data:image/png;base64,' + data.base64
+                this.enable_CaptchaField = true;
+              } else {
+                this.enable_CaptchaField = false;
+              }
+            })
+          }
+          else {
+            this.enable_CaptchaField = false;
+          }
+        })
+      }
+    } else {
+      this.enable_CaptchaField = false;
+    }
+  };
+
+  recall_Captcha(user) {
+    if (user && this.pattern.test(user)) {
+      var json_Get_Captcha = {
+        "username": user
+      }
+      const get_captcha_User = this.userService.encrypt(json_Get_Captcha);
+      if (get_captcha_User) {
+        this.userService.get_Captcha(get_captcha_User).subscribe(data => {
+          if (data.base64) {
+            this.img_Captcha = 'data:image/png;base64,' + data.base64
+            this.enable_CaptchaField = true;
+          } else {
+            this.enable_CaptchaField = false;
+          }
+        })
+      }
+    }
+  };
+
+  getFullYear() {
+    return new Date().getFullYear();
+  }
+}
+
+
+dashboard.html
+<div class="air__layout__content ">
+  <div class="air__utils__content" style="margin-top: -23px !important;">
+      <div class="air__topbar__searchContainer float-right" style="margin-bottom: 20px;">
+        <div dropdown #dropdown="bs-dropdown" placement="bottom right" [isDisabled]="false" container="body"
+          [insideClick]="true">
+          <em class="air__topbar__searchIcon fe fe-search"></em>
+          <input dropdownToggle id="button-alignment" type="button"
+            aria-controls="dropdown-animated dropdown-disabled-menu" class="air__topbar__searchInput" type="text"
+            placeholder="Start typing to search..." name="searchData" #searchData="ngModel" [(ngModel)]="searchdata.searchData" />
+          <div *dropdownMenu id="dropdown-alignment"  class="dropdown-menu hideclearfilter dropdown-menu-right" role="menu"
+            aria-labelledby="button-disabled-menu" style="margin-right: -9rem; min-width: 20rem;padding: 1rem;">
+            <div class="kit__l1 ">
+              <div class="text-uppercase font-size-12 mb-2 text-gray-6">Filters <a (click)="clearfilter()" style="float: right;
+                font-size: 12px;cursor:pointer;
+                color: #333333 !important;">Clear filter</a></div> 
+              <ul class="list-unstyled">
+                <div class="form-group">
+                  <div class="btn-group mr-2 mb-2" aria-label="" role="group">
+                    <button type="button" class="btn btn-light" [ngClass]="{'active':searchdata.date =='1','nonactive':searchdata.date !='1'}" (click)="searchdata.date ='1'">Yesterday</button>
+                    <button type="button" class="btn btn-light" [ngClass]="{'active':searchdata.date =='7','nonactive':searchdata.date !='7'}" (click)="searchdata.date ='7'">Last Week</button>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+                      aria-expanded="false" [ngClass]="{'active':searchdata.date =='15' || searchdata.date =='30' || searchdata.date =='60','nonactive':searchdata.date !='15' && searchdata.date =='30' && searchdata.date =='60'}">
+                        More
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item searcdate" href="javascript: void(0);" (click)="searchdata.date ='15'">Last 15 Days</a>
+                        <a class="dropdown-item searcdate" href="javascript: void(0);" (click)="searchdata.date ='30'">Last 30 Days</a>
+                        <a class="dropdown-item searcdate" href="javascript: void(0);" (click)="searchdata.date ='60'">Last 60 Days</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group row" style="padding: 0px 10px;">
+                  <label class="kit__utils__control kit__utils__control__checkbox kit__gallery__control text-warning pull-left">
+                    <input type="radio" name="type" #type="ngModel" [ngModel]="searchdata.type1" value="Document" (change)="Onchange($event,'Document')"/>
+                    <span class="kit__utils__control__indicator"></span>
+                    Document
+                  </label>
+                  
+                  <label class="kit__utils__control kit__utils__control__checkbox kit__gallery__control pull-right" style="color: rgb(201 101 106) !important;">
+                    <input type="radio" name="type" #type="ngModel" [ngModel]="searchdata.type1" value="Library" (change)="Onchange($event,'Library')"/>
+                    <span class="kit__utils__control__indicator"></span>
+                    Library
+                  </label>
+                </div>
+
+                <div class="form-group" *ngIf="searchdata.type1 == 'Document'">
+                  <label>By Progress</label>
+                  <ng-multiselect-dropdown [placeholder]="'Select Progress'" [data]="searchList"
+                    [(ngModel)]="searchdata.progress" [settings]="searchSettings" (onSelect)="onItemSelect($event)"
+                    (onDeSelect)="onItemDeSelect($event)" (onDeSelectAll)="onItemDeSelectAll($event)"
+                    (onSelectAll)="onSelectAll($event)">
+                  </ng-multiselect-dropdown>
+                </div>
+  
+                <div class="form-group" *ngIf="searchdata.type1 == 'Library'">
+                  <label>Search In</label>
+                  <ng-multiselect-dropdown [placeholder]="'Select Unit'" [data]="searchUnitList"
+                    [(ngModel)]="searchdata.unit" [settings]="searchUnitSettings" (onSelect)="onItemUnitSelect($event)"
+                    (onDeSelect)="onItemUnitDeSelect($event)" (onDeSelectAll)="onItemUnitDeSelectAll($event)"
+                    (onSelectAll)="onUnitSelectAll($event)">
+                  </ng-multiselect-dropdown>
+                </div>
+                <div class="form-group">
+                  <button class="btn text-white pull-right" (click)="getClientList();dropdown.hide()" style=" background-color: #6EACAF !important;">Search</button>
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="mt-2 float-left">
+      <h5>Recent Activity</h5>
+    </div>
+
+    <div class="card col-lg-12" *ngIf="!clientList || clientList.length==0">
+      <div class="card-body" style="padding:10px 5px 1px 5px !important; ">
+        <div class="kit__l3">
+            <ul class="list-unstyled">
+              <li class="kit__l3__item">
+                No Data Found
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngFor="let value1 of arrayvalue| filter:searchdata.searchData;let i =index">
+    <div class="card col-lg-12" [ngClass]="{'odd':i%2!=0}">
+      <div class="card-body" style="padding:10px 5px 1px 5px !important; ">
+         <div class="kit__l3">
+              <ul class="list-unstyled">
+                <li class="kit__l3__item">
+                  <a  class="kit__l3__itemLink">
+                    <div class="kit__l3__itemMeta font-size-36 flex-shrink-0 my-1 mt-3">
+                     <img *ngIf="value1.Formtype_fk === 1" alt="" src="./assets/svg/structured-doc-icon.svg"  style="width:50px; height: 36px;"  />
+                     <img *ngIf="value1.Formtype_fk === 2" alt="" src="./assets/svg/unstructured-doc-cion.svg" style="width:50px; height: 36px;" />
+                     <img *ngIf="value1.Formtype_fk === 3" alt="" src="./assets/svg/assessment_survey-icon.svg" style="width:50px; height: 36px;" />
+                    </div>
+                    
+                    <div class="mr-1 text-uppercase" style="width: 620px;">
+                      <div (click)="btnviewclick(value1)" class="font-weight-bold" style="color: #6EACAF !important ;font-size:16px;cursor: pointer;">{{value1.Masterdocumentname}}</div>
+                      <div class="text-muted" *ngIf="value1.lastmodified_date==null">{{value1.SystemName}} | Modified : {{value1['Created Date'] | date: "MM/dd/yyyy"}}</div>
+                      <div class="text-muted" *ngIf="value1.lastmodified_date!=null">{{value1.SystemName}} | Modified : {{value1['lastmodified_date'] | date: "MM/dd/yyyy"}}</div>
+                    </div>
+                    <div class="statussec" style="width: 90px;">
+                      <span style="font-weight: bold;text-align: center; color:gray;text-transform: capitalize;">{{value1.status}}</span>
+                    </div>
+                    <div class="kit__l3__item dashboardactionbtn" style="margin-left: calc(100% - 81%);">
+                      <span *ngIf="value1.status == 'In-Progress' || value1.status == 'Re-Edit'" (click)="btnEditClick(value1)" class="btn-rounded text-white" style=" margin-right: 23px;cursor: pointer;background-color: #6EACAF !important; position: relative;"> Edit</span>
+                      <span *ngIf="value1.status != 'In-Progress' && value1.status != 'Re-Edit'" (click)="btnviewclick(value1)" class="btn-rounded text-white" style=" margin-right: 15px;cursor: pointer;background-color: #6EACAF !important; position: relative;"> View</span>
+                      <span  *ngIf="value1.status == 'Re-Edit' || value1.status == 'In-Progress' ||value1.status == 'Submitted' || value1.status == 'Approved'" style=" position: relative; margin-right: 28px; cursor:pointer;display: inline-block;" (click)="gotosharepage(value1)">
+                   <img class="imgicons" tooltip="Share" placement="bottom" [src]="shareicon" alt="" 
+                          (mouseout)="imagechangeoverout('share')"style="width:35px; height:20px; filter: brightness(50%);"/> </span>
+                          <span *ngIf="value1.status == 'Library' " style=" position: relative; margin-right: 28px;display: inline-block; cursor: pointer;" (click)="saveopenModal(template)" >
+                          <img class="imgicons"  placement="bottom" [src]="shareicon" alt="" 
+                          (mouseout)="imagechangeoverout('share')"style="width:35px; height:20px; filter: brightness(50%);"/> 
+                          </span>
+                    <span style="position: relative;cursor:pointer" (click)="showmorediv1(value1,value1.designproductId)"> <img src="./assets/svg/moreicon.svg" alt="" style=" width:4px; height:20px;" /></span> 
+                      <div class="selecteddivs" *ngIf="value1.designproductId==selectedid && moredivshow">
+                        <a (click)="btnPDFClick0(value1)" style="padding-right: 5px;"> 
+                          <span class="mdi mdi-file-pdf" [ngStyle]="value1.Formtype_fk == '1' || value1.Formtype_fk == '2'  ? {'color': '#6EACAF', 'cursor':'pointer'} : {'color': 'rgb(135,206,250)', 'cursor':'default'}" tooltip="PDF"  placement="top" container="body"></span>
+                        </a>
+                        <a *ngIf="value1.Formtype_fk == '1' || value1.Formtype_fk == '3'" style="padding-right: 5px;"> 
+                          <span class="mdi mdi-file-check"  [ngStyle]="value1.Formtype_fk == '2' ? {'color': '#6EACAF', 'cursor':'pointer'} : {'color': '#87cefa8c', 'cursor':'default'}" tooltip="RC View" placement="top" container="body"></span>
+                        </a>
+                        <a *ngIf="value1.Formtype_fk == '2'" (click)="downloadlink(value1,'html')" style="padding-right: 5px;"> 
+                          <span class="mdi mdi-file-check"  [ngStyle]="value1.Formtype_fk == '2' ? {'color': '#6EACAF', 'cursor':'pointer'} : {'color': 'rgb(135,206,250)', 'cursor':'default'}" tooltip="RC View" placement="top" container="body"></span>
+                        </a>
+                    </div>  
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    </ng-container>
+
+    <ng-template #template>
+      <div class="modal-body"style="text-align: end;width: 90%;" >
+          <h4 class="submit_h4">Library Document Can't Be Share</h4>
+          <button class="btn mr-3 submit_Answer" type="button"  style="background-color: #6EACAF !important; border-color: #6EACAF;"(click)="btnClosePopup()">OK</button>&nbsp;&nbsp;
+      </div>
+    </ng-template>
+
+<div class="">
+<div class="card-body">
+<div class="row">
+<div class="card col-xl-6 col-lg-12" style="    border: 1px solid #e2dede;
+padding: 15px;
+margin: 0px 6px 0px 0px;
+flex: 0 0 49.5%;
+max-width: 49.5%;">
+            <h5 class="mb-4"><strong>Document Code Summary</strong></h5>
+            <div class="mb-5"> <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels"
+                [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                [chartType]="barChartType" [colors]="barChartColors">
+              </canvas>
+            </div>
+          </div>
+          <div class="card col-xl-6 col-lg-12" style="border: 1px solid #e2dede;
+padding: 15px;
+margin: 0px 0px 0px 6px;
+flex: 0 0 49.5%;
+max-width: 49.5%;">
+            <h5 class="mb-4"><strong>My Documents Summary</strong></h5>
+            <div class="mb-5">
+              <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
+                [labels]="doughnutChartLabels" [chartType]="doughnutChartType" [colors]="doughnutChartColors">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     <style type="text/css">.launcher{position:relative;text-align:center;color:#272727;z-index:999!important}.moreicon{position:absolute;top:45px}.moreicon:before{content:'';border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid #ccc;border-bottom-color:#ccc;position:absolute;top:-9px;left:16px}.moreicon:after{position:absolute;top:-8px;left:16px;display:inline-block;border-right:9px solid transparent;border-bottom:9px solid #fff;border-left:9px solid transparent;content:"";z-index:9999}.apps{position:relative;border:1px solid #ccc;border-color:rgba(0,0,0,0.2);box-shadow:0 2px 10px rgba(0,0,0,0.2);-webkit-transition:height 200ms ease-in-out;transition:height 200ms ease-in-out;min-height:210px;overflow-y:auto;overflow-x:hidden;width:320px;height:375px;display:block;white-space:normal;text-align:left;margin:0;padding:0}.apps ul{background:#fff;margin:0;padding:15px;text-align:left;width:440px;overflow:hidden;list-style:none;position:relative;display:block;white-space:normal;min-height:100px}.apps ul li{height:98px;width:86px;color:#000;margin:0;padding:1px;text-align:center;display:inline-block;vertical-align:top}.apps ul li a{text-decoration:none;display:block;margin:8px 2px;text-align:center;border:1px solid transparent;-webkit-transform:translate(0px,0px);transform:translate(0px,0px);-webkit-transition:-webkit-transform .2s cubic-bezier(0.333,0,0,1);transition:-webkit-transform .2s cubic-bezier(0.333,0,0,1);transition:transform .2s cubic-bezier(0.333,0,0,1);transition:transform .2s cubic-bezier(0.333,0,0,1),-webkit-transform .2s cubic-bezier(0.333,0,0,1)}.apps ul li a:hover{border-color:#e5e5e5}.apps ul li a span{font-size:13px;line-height:20px;display:block;color:#272727}.apps ul li a img{width:64px;height:64px;display:block;margin:0 auto}.apps .more{line-height:40px;text-align:center;display:block;width:322px;background:#f5f5f5;cursor:pointer;height:40px;overflow:hidden;position:absolute;text-decoration:none;color:#282828;bottom:0}.apps .more .apps{height:500px!important}.apps .overflow .more{border-bottom:1px solid #ebebeb;left:28px;width:270px;height:0;cursor:default;outline:none}.launcher .button{cursor:pointer;width:30px;margin:0 auto}.launcher .button:hover img{opacity:.85}.hide{display:none}::-webkit-scrollbar-thumb{background-clip:padding-box;background-color:rgba(0,0,0,0.3);border:5px solid transparent;border-radius:10px;min-height:20px;min-width:20px;height:5px;width:5px}::-webkit-scrollbar{height:15px;width:15px;background:#fff}::-webkit-scrollbar-button{height:0;width:0}@-webkit-keyframes menu{0%{opacity:0;-webkit-transform:translateY(-2rem);transform:translateY(-2rem)}100%{oapcity:1;-webkit-transform:translateY(0);transform:translateY(0)}}@keyframes menu{0%{opacity:0;-webkit-transform:translateY(-2rem);transform:translateY(-2rem)}100%{oapcity:1;-webkit-transform:translateY(0);transform:translateY(0)}}.kit__utils__heading:after,.air__utils__heading:after{position:absolute;display:block;content:'';left:0;bottom:-3px;height:4px;width:35px;border-radius:7px;background:#6EACAF} </style>
+  </div>
+</div>
+
+
+dashboard.scss
+
+.btn-light:focus ,.btn-light.active , .btn-light:active, .btn-light:not(:disabled):not(.disabled).active, .show > .btn-light.dropdown-toggle{
+    background-color: #6eacaf;
+    border-color: #6eacaf;
+    color:#fff;
+}
+.odd{
+    background-color:#e4e6e6  !important;
+}
+.kit__utils__control input:checked ~ .kit__utils__control__indicator{
+    background: #6eacaf !important;
+}
+:host ::ng-deep .form-group .multiselect-dropdown .dropdown-btn  {
+    font-size: 13px !important;
+  }
+  :host ::ng-deep .form-group .multiselect-dropdown .dropdown-up{
+  border-bottom: 6px solid #636161 !important;
+  border-left: 4px solid transparent !important;
+  border-right: 4px solid transparent !important;
+  }
+  :host ::ng-deep .form-group .multiselect-dropdown .dropdown-down{
+  border-top: 6px solid #636161 !important;
+  border-left: 4px solid transparent !important;
+  border-right: 4px solid transparent !important;
+  }
+  :host ::ng-deep .form-group .multiselect-dropdown .dropdown-btn .selected-item {
+    border: 1px solid #6eacaf !important;
+    margin-right: 4px !important;
+    background: #6eacaf !important;
+    padding: 0 5px !important;
+    color: #fff !important;
+    border-radius: 2px !important;
+    float: left !important;
+}
+:host ::ng-deep .multiselect-dropdown .dropdown-btn .selected-item a{
+    color: #fff !important;
+}
+:host ::ng-deep .multiselect-item-checkbox input[type=checkbox]:checked + div:before{
+    background: #6eacaf !important;
+}
+:host ::ng-deep .multiselect-item-checkbox input[type=checkbox] + div:before{
+    color: #6eacaf !important;
+    border: 2px solid #6eacaf !important;
+}
+.font-weight-bold {
+    font-weight: 600 !important;
+}
+.kit__l3__itemMeta{    margin-right: 20px !important;
+}
+.selecteddivs{
+    background: white;
+    position: absolute;
+    right: 37px;
+    margin-top: -3px;
+    border: 1px solid #cac7c7;
+    z-index: 999;
+  }
+  .searcdate{color: #333333 !important;}
+  .searcdate:hover{color: #fff !important;background-color: #6eacaf !important;}
+  .selecteddivs span{font-size: 29px; cursor:pointer;}
+  .selecteddivs a span{color: #b6d8d9;}
+  .selecteddivs a:hover span{color: #6eacaf !important;}
+  .imgicons :hover
+  {
+    background-color: #6EACAF !important;
+  }
+
+  .submit_h4{
+    text-align: center;padding: 5px;
+  }
+  .submit_Answer{
+    width:100px; background-color: #6EACAF !important; border-color: #6EACAF !important;color: #fff !important;
+  }
+  
+  dashboard.ts
+  
+  import { Component, OnInit, HostListener,TemplateRef, ViewChild } from '@angular/core';
+import { UserService } from '../../../../shared/services/user.service';
+import { Router } from '@angular/router';
+import { ChartType } from 'chart.js';
+import { Color, MultiDataSet, Label } from 'ng2-charts';
+import { ChartOptions, ChartDataSets } from 'chart.js';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import * as _ from 'lodash';
+@Component({
+  selector: 'app-dashboardview',
+  templateUrl: './dashboardview.component.html',
+  styleUrls: ['./dashboardview.component.scss']
+})
+export class DashboardviewComponent implements OnInit {
+  listname:any=[];
+  selectedid: any;
+moredivshow: boolean=false;
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+  
+   if(event.target.currentSrc && (event.target.currentSrc.search("moreicon.svg")!=-1)){
+this.moredivshow=true;
+   }else{
+    this.moredivshow=false;
+   }
+  }
+  constructor(private userService: UserService, private router: Router,private modalService: BsModalService) { }
+  ngOnInit() {
+    this.getLibdata();
+    this.searchSettings = {
+      singleSelection: false,
+      idField: 'progressName',
+      textField: 'progressName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      itemsShowLimit: 2,
+    };
+    this.searchUnitSettings = {
+      singleSelection: false,
+      idField: 'unitName',
+      textField: 'unitName',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      itemsShowLimit: 2,
+    };
+  }
+
+  clientList: any;
+  userdata: any;
+  doughactivity:any=[];
+  doughnoofdocu=[];
+  noofdocument=[];
+  noofdoc=[];
+  bucode=[];
+  searchdata: any = {
+    date: "",
+    progress: "",
+    searchData: "",
+    type1: "",
+    unit: ""
+  }
+  searchList = [
+    {
+      "progressName":"InProgress"
+    },
+    {
+      "progressName":"Re-Edit"
+    },
+    {
+      "progressName":"Approved"
+    },
+    {
+      "progressName":"Submitted"
+    }
+  ];
+  selectedItems = [];
+  searchSettings = {};
+  prog:any;
+  onItemSelect(item: any) {
+    
+    let ab: any = new Array<any>();
+    let id: any;
+    if (item) {
+      ab.push(item)
+      
+    }
+    if (this.prog == undefined || this.prog == "" || this.prog == null)
+      this.prog = ab.toString()
+    else
+      this.prog = this.prog + ',' + ab.toString()
+   
+  }
+  onItemDeSelect(item: any) {
+    
+    let ab;
+    ab = this.prog.split(',')
+    ab = _.reject(ab, (o) => {
+      return o == ''
+    })
+    let id: any;
+    if (item) {
+      ab = _.reject(ab, (o) => {
+        return o == item
+      })
+    }
+    this.prog = ab.toString()
+  }
+  onItemDeSelectAll(items: any) {
+    this.prog = null
+  }
+
+  onSelectAll(items: any) {
+
+    let lis : any=[] ;
+    let ab : any=[];
+    let id: any;
+    if (items) {
+      items.forEach(element => {
+       
+        ab.push(element);
+       
+      });
+      
+      id = ab.toString();
+
+    }
+    
+    else {
+      id = null;
+
+    }
+    this.prog = id
+    
+  }
+  searchUnitList = [
+    {
+      "unitName":"OverAll"
+    },
+    {
+      "unitName":"Business Unit"
+    },
+    {
+      "unitName":"Staging"
+    }
+  ];
+  searchUnitSettings = {};
+  unit:any;
+  onItemUnitSelect(item: any) {
+   
+    let ab: any = new Array<any>();
+    let id: any;
+    if (item) {
+      ab.push(item)
+    }
+    if (this.unit == undefined || this.unit == "" || this.unit == null)
+      this.unit = ab.toString()
+    else
+      this.unit = this.unit + ',' + ab.toString()
+    
+  }
+  onItemUnitDeSelect(item: any) {
+    
+    let ab;
+    ab = this.unit.split(',')
+    
+    ab = _.reject(ab, (o) => {
+      return o == ''
+    })
+    let id: any;
+    if (item) {
+      ab = _.reject(ab, (o) => {
+        return o == item
+      })
+    }
+    this.unit = ab.toString()
+  }
+  onItemUnitDeSelectAll(items: any) {
+    this.unit = null
+  }
+  onUnitSelectAll(items: any) {
+   
+    let ab:any=[];
+    let id: any;
+    if (items) {
+      items.forEach(element => {
+     
+        ab.push(element);
+     
+      });
+   
+      id = ab.toString();
+
+    }
+    else {
+      id = null;
+
+    }
+    this.unit = id
+  }
+  
+  clearfilter(){
+    $('.hideclearfilter').hide();
+    // this.getClientList();
+    var clearvalue : any = {
+      date: "",
+      progress: "",
+      searchData: "",
+      type1: "",
+      unit: ""
+    }
+    this.onItemUnitDeSelectAll(null)
+    this.searchdata.date=""
+    this.searchdata.type1 = ""
+    this.searchdata.progress=[]
+    this.searchdata.unit=[]
+    
+    this.userService.recentactivity(clearvalue).subscribe(data => {
+      this.clientList = data;
+      this.dataarray=data;
+    
+      this.value1=this.clientList[0]
+      this.value2=this.clientList[1]
+      this.value3=this.clientList[2]
+      this.value4=this.clientList[3]
+      this.arrayvalue=this.dataarray.slice(0,4)
+    
+  });
+}
+modalRef: BsModalRef;
+  getLibdata() {
+    this.getClientList()
+    this.userService.getLibrarySummaryData().subscribe(data => {
+      
+      this.getuseractive();
+      this.clientList = data;
+      // this.test.push(this.clientList[0].NoOfDocument)
+     
+      for(var i=0;i<this.clientList.length;i++){
+       
+        this.noofdocument.push(this.clientList[i].NoOfDocument)
+        this.noofdoc.push(this.clientList[i].NoOfDocCode)
+        this.bucode.push(this.clientList[i].BuCode)
+        // this.test.push(this)
+      }
+    })
+  }
+  Onchange(event,type){
+    console.log("change",type)
+    if(event && type){
+      this.searchdata.type1 = type
+    }
+  }
+  value1:any;
+  value2:any;
+  value3:any;
+  value4:any;
+  dataarray:any;
+  arrayvalue:any;
+  value:any
+  getClientList() {
+  
+    var searchvalue = Object.assign({}, this.searchdata);
+    if(this.prog && this.searchdata.type1 == 'Document'){
+      searchvalue.progress = this.prog
+      searchvalue.unit = ''
+     
+    }
+    else{
+      searchvalue.unit = this.unit?this.unit:''
+      searchvalue.progress = ''
+    
+    }
+    
+    
+    this.userService.recentactivity(searchvalue).subscribe(rdata => {
+      this.clientList = rdata;
+      this.dataarray=rdata;
+     
+      this.value1=this.clientList[0]
+      this.value2=this.clientList[1]
+      this.value3=this.clientList[2]
+      this.value4=this.clientList[3]
+      this.arrayvalue=this.dataarray.slice(0,4)
+    
+    })
+  }
+  gotosharepage(event){
+
+    
+    var obje = {
+      "documentname":event.SystemName,
+      "documentid":event.designproductId,
+      "doctype": event.Formtype_fk
+    }
+    this.userService.changeNav(obje)
+    this.router.navigate(['/client/notificationshare']);
+  }
+
+  saveopenModal(template: TemplateRef<any>) {
+    console.log("sasasdas",template)
+    this.modalRef = this.modalService.show(template,
+        Object.assign({}, { class: 'modal-md' }));     
+    }
+    btnClosePopup(){
+      this.modalRef.hide();
+     
+    }
+propertydata: any;
+btnEditClick(value) {
+  this.propertydata = {
+    "parent": "Inprogress"
+  }
+  var obje={}
+  var tableName = "";
+  if(this.searchdata.type1 == "Library")
+  {
+    tableName = "library";
+  }
+  else
+  {
+    tableName = "design";
+  }
+  if(value.Formtype_fk==1 || value.Formtype_fk==3){
+  obje = {
+    "routerpage":"Inprogress",
+    "tablename":tableName,
+    "content":"Editable",
+    "designid": value.designproductId,
+    "mode": "edit",
+    "formtypeid": value.Formtype_fk
+  }}
+  if(value.Formtype_fk==2){
+    obje = {
+      "routerpage":"Inprogress",
+      "tablename":tableName,
+      "content":"Editable",
+      "designid": value.designproductId,
+      "mode": "edit",
+      "formtypeid": value.Formtype_fk
+    }}
+ this.userService.changeNav(obje)
+  if (value.Formtype_fk === 1) this.router.navigate([`/designbuilder`]);
+
+  else if (value.Formtype_fk === 2) this.router.navigate([`/htmldocbuilder`]);
+
+  else if (value.Formtype_fk === 3) this.router.navigate([`/surveybuilder`]);
+}
+
+btnviewclick(value){
+  var obje={}
+  var tableName = "";
+  if(this.searchdata.type1 == "Library")
+  {
+    tableName = "library";
+  }
+  else
+  {
+    tableName = "design";
+  }
+  if(value.Formtype_fk==1 || value.Formtype_fk==3){
+  obje = {
+    "routerpage":String(value.status),
+    "tablename":tableName,
+    "content":"notEditable",
+    "designid": value.designproductId,
+    "mode": "edit",
+    "formtypeid": value.Formtype_fk
+  }}
+  if(value.Formtype_fk==2){
+    obje = {
+      "routerpage":String(value.status),
+      "tablename":tableName,
+      "content":"notEditable",
+      "designid": value.designproductId,
+      "mode": "edit",
+      "formtypeid": value.Formtype_fk
+  }}
+
+ this.userService.changeNav(obje)
+  if (value.Formtype_fk === 1) this.router.navigate([`/designbuilderpreview`]);
+
+  else if (value.Formtype_fk === 2) this.router.navigate([`/designview`]);
+
+  else if (value.Formtype_fk === 3) this.router.navigate([`/surveybuilder`]);
+}
+  
+  
+// propertydata: any;
+// btnsecondclick() {
+//   this.propertydata = {
+//     "parent": "in-progress"
+//   }
+
+//   var obje = {
+//     "routerpage":"inprogress",
+//     "tablename":"design",
+//     "content":"Editable",
+//     "designid": this.value2.designproductid,
+//     "mode": "edit",
+//     "formtypeid": this.value2.formtypeid
+//   }
+//   this.userService.changeNav(obje)
+
+//   // this.router.navigate([`/designbuilder/inprogress/edit/${obje.designid}`]);
+
+  
+//   if (this.value2.formtypeid === 1) this.router.navigate([`/designbuilder`]);
+
+//   else if (this.value2.formtypeid === 2) this.router.navigate([`/htmldocbuilder`]);
+
+//   else if (this.value2.formtypeid === 3) this.router.navigate([`/surveybuilder`]);
+// }
+// btnviewsecond(){
+// this.btnsecondclick();
+// }
+
+view4(e){
+
+ 
+
+
+}
+showmorediv1(frmid,id){
+      this.selectedid=frmid.designproductId;
+      this.moredivshow=!this.moredivshow;
+   }
+   
+// btnEditClick0(event) {
+ 
+//   // var typeid = this.formtype
+//   var obje = {
+//     "routerpage":"submitted",
+//     "tablename":"design",
+//     "content":"notEditable",
+//     "designid": event.designproductId,
+//     "mode": "edit",
+//     "formtypeid": event.Formtype_fk
+//   }
+//   this.userService.changeNav(obje)
+//   // this.router.navigate([`/designbuilder/inprogress/edit/${obje.designid}`]);
+
+  
+//   if (event.Formtype_fk=== 1) this.router.navigate([`/designbuilder`]);
+
+//   else if (event.Formtype_fk === 2) this.router.navigate([`/htmldocbuilder`]);
+
+//   else if (event.Formtype_fk === 3) this.router.navigate([`/surveybuilder`]);
+// }
+
+tablename="design"
+btnPDFClick0(event) {
+  if (event.Formtype_fk === 1) {
+    this.userService.downloadPDFstructdoc(event.designproductId,this.tablename).subscribe(
+      response => {
+
+        let blob: any = new Blob([response], { type: "application/pdf;" });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+        error =>{
+          alert("PDF file not found for the selected document. Please try again later.")
+        })
+      }
+  
+
+  if (event.Formtype_fk === 2)
+  // this.downloadlink(pdfid)
+  // this.name = "pdf"
+  {
+    
+    this.userService.DownloadPDFFile(event.designproductId,this.tablename).subscribe(
+      response1 => {
+        let blob: any = new Blob([response1], { type: 'application/PDF;' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+      error =>{
+        alert("PDF file not found for the selected document. Please try again later.")
+      })
+  }
+}
+
+btnHTMLClick0(event) {
+  if (event.Formtype_fk === 2) {
+    var pdfid = event.designproductId
+    this.downloadlink(pdfid,'html')
+    this.name = "html"
+  }
+}
+
+btnJSONClick0(event) {
+  if (event.Formtype_fk === 1 || event.Formtype_fk === 3) {
+    var pdfid = event.designproductId
+    this.downloadlink(pdfid,'json')
+    this.name = "json"
+  }
+}
+name: any
+downloadlink(pdfid,docname) {
+    this.name=docname;
+       if (this.name == "html") {
+        this.userService.downloadPDF(pdfid.designproductId,this.tablename).subscribe(
+          res => {
+        if (res.html === "Not Found") {
+          alert("HTML file not found for the selected document. Please try again later.");
+        }
+        else {
+              // var fileURL = URL.createObjectURL(res.pdf);
+              // let blob: any = new Blob([res.blob()], { type: 'application/pdf;' });
+              // const url = window.URL.createObjectURL(blob);
+              // window.open(url);
+              var myjson = res.html;
+              var xoo = window.open();
+              xoo.document.open();
+              xoo.document.write(myjson);
+              xoo.document.close();
+        }
+      });
+      }
+      else if (this.name == "json") {
+        this.userService.downloadPDF(pdfid.designproductId,this.tablename).subscribe(
+          res => {
+        if (res === "Not Found") {
+          alert("JSON not found for the selected document. Please try again later.");
+        }
+        else {
+//          var myjson = JSON.stringify(res.Actjson, null, 2);
+          var myjson = res.Actjson;
+         
+          var xyy = window.open();
+          xyy.document.open();
+          xyy.document.write(myjson);
+          xyy.document.close();
+        }
+    });
+}
+}
+
+  getuseractive() {
+    this.userService.getUserActivitySummaryData().subscribe(data => {
+      this.userdata = data;
+    
+      
+      for(var i=0;i<this.userdata.length;i++){
+        
+        this.doughactivity.push(this.userdata[i].Activity)
+        this.doughnoofdocu.push(this.userdata[i].NoofDocument)
+        
+        // this.test.push(this)
+      }
+    })
+  }
+
+  public doughnutChartLabels: Label[] = this.doughactivity;
+  public doughnutChartData: MultiDataSet = [
+    this.doughnoofdocu
+  ];
+ 
+  public doughnutChartType: ChartType = 'doughnut';
+  public doughnutChartColors = [{ backgroundColor: ['#71aab1','#708cb1', '#98bce9', '#4c8991','#2e8c9f','#7ea2a5'], },];
+  public doughnutChartOptions: ChartOptions = {
+    responsive: true,
+    // We use these empty structures as placeholders for dynamic theming.
+    // scales: { xAxes: [{}], yAxes: [{}] },
+    legend: {
+      position: 'bottom',
+      align: 'start',
+    },
+  };
+
+  public barChartOptions: ChartOptions = {
+    responsive: true,
+    // We use these empty structures as placeholders for dynamic theming.
+    scales: { xAxes: [{}], yAxes: [{}] },
+    legend: {
+      position: 'bottom',
+      align: 'start',
+    },
+    plugins: {
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+      }
+    }
+  };
+  
+  public barChartLabels: Label[] = this.bucode;
+  public barChartType: ChartType = 'bar';
+  public barChartLegend = true;
+  public barChartPlugins = '';
+
+  public barChartData: ChartDataSets[] = [
+    { data:this.noofdocument , label: 'No.of Document' },
+    { data: this.noofdoc, label: 'No.of Doc Code' }
+  ];
+
+  public barChartColors: Color[] = [
+    { backgroundColor: '#6facb1', borderColor: "#6facb1", borderWidth:1 },
+    { backgroundColor: '#4c8991', borderColor: "#4c8991", borderWidth:1 },
+  ];
+ /* public barChartColors: Color[] = [
+    { borderColor: 'red' },
+    { borderColor: 'red' },
+  ];*/
+  shareicon: string='./assets/svg/share-icon.svg';  
+  imagechangeoverout(value){
+  
+    if(value=="share")
+    {
+      this.shareicon='./assets/svg/share-icon.svg'; 
+    }
+  }
+}
+
+
+profilepage.html
+
+<div class="container-fluid">
+  <div class="row mx-auto mt-4">
+    <form class="form-horizontal form-material ng-untouched ng-pristine ng-valid" #profilengForm="ngForm" name="proForm"
+      (ngSubmit)="updateProfileDetails(profilengForm.value)">
+      <div class="col-xl-5 col-lg-12 pull-left" style="background-color: white;">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="text-black mt-4">
+              <strong>Personal Information</strong>
+            </h5>
+            <div class="d-flex flex-wrap flex-column align-items-center">
+              <div class="kit__utils__avatar kit__utils__avatar--size64 mb-3">
+                <label class="hoverable" for="fileInput" (click)="fileInput.click()">
+                  <img class="rounded-circle" alt="" width="64" [src]="profileDetails.Profilepicture">
+                </label>
+              </div>
+              <div class="text-center">
+                <div class="text-dark font-weight-bold font-size-18">{{userDetail.firstname}} {{userDetail.lastname}}
+                </div>
+                <div class="text-uppercase font-size-12 mb-3">{{userDetail.usergroupname}}</div>
+                <input style="display: none" type="file" (change)="onSelectFile($event)" accept="image/*" #fileInput>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="l0">First Name <span class="req">*</span></label>
+                  <input type="text" required id="firstName" name="firstname" class="form-control form-control-line"
+                  onkeypress="return /[a-z]/i.test(event.key)" [(ngModel)]="profileDetails.firstname" #firstName="ngModel"  placeholder="Enter First Name">
+                  <span *ngIf="firstName.touched && firstName.invalid" class="form-text text-danger">
+                    Please enter the First Name !
+                  </span>
+                </div> 
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="l0">Last Name <span class="req">*</span></label>
+                  <input class="form-control form-control-line" required id="lastName" name="lastname" type="text"
+                  onkeypress="return /[a-z]/i.test(event.key)" [(ngModel)]="profileDetails.lastname" #lastName="ngModel" placeholder="Enter Last Name">
+                  <span *ngIf="lastName.touched && lastName.invalid" class="form-text text-danger">
+                    Please enter the Last Name !
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="l0">Email <span class="req">*</span></label>
+                  <input placeholder="Enter your Email" class="form-control form-control-line" #email="ngModel"
+                    id="email" name="email"  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" [(ngModel)]="profileDetails.email" type="email">
+                  <div class="errorlab">
+                    <span *ngIf="email.touched &&email.invalid && !email.hasError('pattern')"
+                      class="form-text text-danger">
+                      Please enter the email ! </span>
+                    <span style="display: block ; font-size: 10px;" class="form-text text-danger"
+                      [hidden]="!email.hasError('pattern')">Email format should
+                      be <small><strong style="font-size: 10px;">user@solvedge.com</strong> </small>
+                  </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Nick Name <span class="req">*</span></label>
+                  <input class="form-control form-control-line" required id="nickname" name="nickname" type="text"
+                  onkeypress="return /[a-z]/i.test(event.key)" [(ngModel)]="profileDetails.nickname" #nickname="ngModel" placeholder="Enter Nick Name">
+                  <span *ngIf="nickname.touched && nickname.invalid" class="form-text text-danger">
+                    Please enter the Nick Name !
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-7 col-lg-12 pull-right">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="text-black mt-4">
+              <strong>Address</strong>
+            </h5>
+            <div class="row mt-3">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Street 1</label>
+                  <input placeholder="street1" class="form-control form-control-line" #lphone="ngModel" id="street1"
+                    name="street1" [(ngModel)]="profileDetails.street1" type="text" mask="">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Street 2</label>
+                  <input placeholder="street2" class="form-control form-control-line" #lphone="ngModel" id="street2"
+                    name="street2" [(ngModel)]="profileDetails.street2" type="text" mask="">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l4">City</label>
+                  <input placeholder="city" class="form-control form-control-line" #lphone="ngModel" id="city"
+                  onkeypress="return /[a-z]/i.test(event.key)" name="city" [(ngModel)]="profileDetails.city" type="text" mask="">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">State</label>
+                  <input placeholder="state" class="form-control form-control-line" #lphone="ngModel" id="state"
+                  onkeypress="return /[a-z]/i.test(event.key)" name="state" [(ngModel)]="profileDetails.state" Onlycharacters="true" type="text" appAlphabetOnly>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Country</label>
+                  <input placeholder="country" class="form-control form-control-line" #lphone="ngModel" id="country"
+                  onkeypress="return /[a-z]/i.test(event.key)" name="country" maxlength="50" [(ngModel)]="profileDetails.country" Onlycharacters="true" type="text"
+                    mask="">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l4">Zipcode</label>
+                  <input placeholder="zipcode" class="form-control form-control-line" #lphone="ngModel" id="zipcode"
+                    name="zipcode" [(ngModel)]="profileDetails.zipcode" OnlyNumber="true" type="text" mask="">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Phone</label>
+                  <input placeholder="(000) 000-0000" class="form-control form-control-line" #phone="ngModel"
+                  pattern="^[0-9]*$" onpaste="return false;" ondrop="return false;"
+                  id="phone" autocomplete="off" minlength="10" maxlength="15" (keyup)="onKey(profileDetails.phone)" name="phone"
+                    [(ngModel)]="profileDetails.phone" type="text" OnlyNumber="true" mask="(000) 000-0000">
+                  <span *ngIf="shownMsg" class="form-text text-danger">Phone No must be 10 numbers</span>
+                  <!-- <span *ngIf="shwErr" class="form-text text-danger">Phone No must be numbers</span> -->
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="defaultunit">Default Unit </label>
+                  <select name="defaultunit" [(ngModel)]="defaultunit" (change)="createDocName($event)"
+                    class="custom-select form-control">
+                    <option *ngFor="let item of defaultarray" [selected]="item.Description==defaultunit">
+                      {{item.Description}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="pull-left mt-1">
+              <div class="form-group">
+                <button style="background-color: #6EACAF !important; border-color: #6EACAF !important;"
+                  class="btn width-200 btn-primary mr-3" (click)="changpass()" type="submit">Change Password
+                </button>
+              </div>
+            </div>
+            <div class="pull-right mt-1">
+              <div class="form-group">
+                <button style="background-color: #6EACAF !important; border-color: #6EACAF !important;"
+                  class="btn width-200 btn-primary mr-3"  type="submit" [disabled]="profilengForm.invalid">Update
+                  Profile</button>
+                <button type="button" class="btn btn-light" routerLink="/client/clientdashboard/clientdashboardview"
+                  (click)="gallery()"
+                  style="background-color: rgb(201 101 106) !important; border-color: rgb(201 101 106);color:#fff">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row mx-auto mt-4 mb-5">
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="text-black mt-4">
+            <strong>Security Questions</strong>
+          </h5>
+          <form class="form-horizontal form-material ng-untouched ng-pristine ng-valid" #securityquestionform="ngForm"
+            name="sqForm" (ngSubmit)="updatesecurityquestion(securityquestionform.value)">
+            <div class="row mt-3">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Question 1 <span class="req">*</span></label>
+                  <dx-select-box [dataSource]="questionlist" displayExpr="question" valueExpr="id"
+                    [value]="loadsecurityquestiondata.question1" [(ngModel)]="loadsecurityquestiondata.question1"
+                    required name="question1"></dx-select-box>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Question 2 <span class="req">*</span></label>
+                  <dx-select-box [dataSource]="questionlist" displayExpr="question" valueExpr="id"
+                    [value]="loadsecurityquestiondata.question2" [(ngModel)]="loadsecurityquestiondata.question2"
+                    required name="question2"></dx-select-box>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l4">Question 3 <span class="req">*</span></label>
+                  <dx-select-box [dataSource]="questionlist" displayExpr="question" valueExpr="id"
+                    [value]="loadsecurityquestiondata.question3" [(ngModel)]="loadsecurityquestiondata.question3"
+                    required name="question3"></dx-select-box>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Answer 1 <span class="req">*</span></label>
+                  <input placeholder="Answer 1" required class="form-control form-control-line" name="answer1"
+                    [(ngModel)]="loadsecurityquestiondata.answer1" type="text">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l3">Answer 2 <span class="req">*</span></label>
+                  <input placeholder="Answer 2" required class="form-control form-control-line" name="answer2"
+                    [(ngModel)]="loadsecurityquestiondata.answer2" type="text">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label" for="l4">Answer 3 <span class="req">*</span></label>
+                  <input placeholder="Answer 3" required class="form-control form-control-line" name="answer3"
+                    [(ngModel)]="loadsecurityquestiondata.answer3" type="text">
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-lg-12">
+                <span class="errormsg" style="display: block;margin-bottom: 10px;">{{qaerror}}</span>
+              </div>
+              <div class="pull-left mt-1">
+                <div class="form-group">
+                  <button [disabled]="!securityquestionform.valid"
+                    style="background-color: #6EACAF !important; border-color: #6EACAF !important;"
+                    class="btn width-200 btn-primary mr-3" type="submit">Save
+                  </button>
+                </div>
+              </div>
+              <div class="pull-right mt-1">
+                <div class="form-group">
+                  <button style="background-color: #6EACAF !important; border-color: #6EACAF !important;"
+                    class="btn width-200 btn-primary mr-3" type="submit" (click)="gotoreport()">Audit Report
+                    </button>
+                </div>
+              </div>
+        
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div style="justify-content: center;display: flex;">
+  <div class="alertPopup" *ngIf="alertShown">
+    <img class="imageView" src="./assets/logon/alert.png" alt="">
+    <div class="fontStyleAlert"> {{alertMessage}}</div>
+    <button class="greenbtn  btn-primary" (click)="alertClose()"> OK </button>
+  </div>
+</div>
+<div class="disableScreen" *ngIf=displayShown></div>
+
+
+profilepage.scss
+
+.errorlab {
+    height: 10px;
+}
+
+#fileInput{
+    display: none;
+}
+ 
+.req,.errormsg{color:#c9656a !important;}
+  
+.form-control{    border: 1px solid #ced4da !important;}
+  
+.alertPopup {
+    position: fixed;
+    top: 10%;
+    z-index: 1050;
+    background: white;
+    width:435px;
+    box-shadow: 0px 0px 0px #cecece;
+    padding: 5px;
+    border: none !important;
+    border-radius: 20px;
+    background-color: white !important;
+}
+  
+.disableScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+    background: #000;
+    z-index: 1040;
+    height: 100%;
+    width: 100%;
+}
+     
+.greenbtn{  
+      background-color: #6EACAF !important;
+      padding: 5px 20px;
+      border-color: #6EACAF;
+      position: relative;
+      left: 340px;bottom: 8px;
+}   
+
+.imageView{
+      height: 50px;
+      top: 19px;
+      left: 10px;
+      position: relative;
+}
+
+.fontStyleAlert{
+      font-size: 14px;
+      position: relative;
+      left: 65px;
+      bottom: 20px
+}
+
+
+profilepage.ts
+
+import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../../shared/services/user.service';
+import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../../environments/environment';
+import { Router } from '@angular/router';
+@Component({
+  selector: 'app-profilepage',
+  templateUrl: './profilepage.component.html',
+  styleUrls: ['./profilepage.component.scss']
+})
+export class ProfilepageComponent implements OnInit {
+  constructor(private userService: UserService, private router: Router, private toast: ToastrService) { }
+  businessUnitdata: any;
+  qaerror: string = "";
+  loadsecurityquestiondata: any = { "question1": '', "question2": '', "question3": '', "answer1": "", "answer2": "", "answer3": "" };
+  ngOnInit() {
+    this.getCurrentUser()
+    this.getquestionlist()
+  };
+  ErrorMsg1:boolean=false;
+  profileDetails: any = {}
+  userDetail: any
+  questionlist: any = [];
+  getquestionlist() {
+    this.userService.getquestionslists().subscribe(
+      (data) => {
+        this.questionlist = data;
+      })
+  };
+
+  getCurrentUser() {
+    this.userService.currentUser.subscribe(
+      (userData) => {
+        if (userData)
+        console.log("nivjmak",userData)
+          this.userDetail = userData;
+        this.profileDetails.firstname = this.userDetail.firstname;
+        this.profileDetails.lastname = this.userDetail.lastname;
+        this.profileDetails.email = this.userDetail.username;
+        this.profileDetails.nickname=this.userDetail.nickname;
+        this.defaultunitdata()
+        if (this.userDetail.userid != undefined) {
+          this.geteditprofile()
+          this.loadsecurityquestion()
+        }
+      }
+    )
+  };
+
+  shownMsg: boolean;
+  shwErr:boolean =false;
+  onKey(value) {
+    if (value.length >= 10 || value.length == 0 ){
+      this.shownMsg = false;
+      this.shwErr = true;
+    } 
+    else{
+      this.shownMsg = true;
+      this.shwErr =false;
+    }
+  };
+  galleryvalue: any = "";
+  gallery() {
+    this.galleryvalue = "Dashboard"
+  };
+
+  defaultarray: any = [];
+  defaultunitdata() {
+    this.userService.getdefaultunitData().subscribe(data => {
+      const map = new Map();
+      for (const item of data) {
+        if (!map.has(item.description)) {
+          map.set(item.description, true);
+          this.defaultarray.push({
+            Id: item.id,
+            Description: item.description,
+          });
+        }
+      }
+      this.businessUnitdata = this.defaultarray[0].Id
+    })
+  };
+
+  api_url: any = environment.swagss;
+  url: any;
+  selectedfile: File = null;
+  onSelectFile(event) {
+    var imageFormat = ['image/jpg', 'image/jpeg', 'image/gif', 'image/webp', 'image/tiff', 'image/psd',
+      'image/raw', 'image/bmp', 'image/heif', 'image/indd', 'image/svg', 'image/png']
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onload = (events: any) => {
+        var filetype = event.target.files[0].type;
+        for (var m = 0; m < imageFormat.length; m++) {
+          if (filetype === imageFormat[m]) {
+            this.profileDetails.Profilepicture = events.currentTarget.result;
+            return;
+          }
+        }
+        this.alertClose();
+      }
+    }
+  };
+
+  alertShown: boolean = false;
+  displayShown: boolean = false;
+  alertMessage = "Please Choose Image Standard Format To Upload"
+  alertClose() {
+    this.alertShown = !this.alertShown
+    this.displayShown = !this.displayShown
+  };
+
+  loadsecurityquestion() {
+    var userid={
+      "userid":this.userDetail.userid
+    }
+    const Id= this.userService.encrypt(userid)
+    if(Id){
+    this.userService.loadsecurityquestion(Id).subscribe(
+      data => {
+        this.loadsecurityquestiondata = data.answer;
+      })
+    }
+  };
+
+  defaultunit: any;
+  profile: any;
+  updatesecurityquestion(value) {
+    var obj: any = value;
+    if (obj.question1 == obj.question2 || obj.question1 == obj.question3 || obj.question2 == obj.question1 || obj.question2 == obj.question3 || obj.question3 == obj.question1 || obj.question3 == obj.question2) {
+      this.qaerror = "Please select unique questions";
+    } else {
+      this.qaerror = "";
+      var obj1 = {
+        "securityquestion": JSON.stringify(value),
+        "userid": this.userDetail.userid
+      }
+      const QuestionJson= this.userService.encrypt(obj1)
+      if(QuestionJson){
+      this.userService.savesecurityquestion(QuestionJson).subscribe(
+        data => {
+          this.toast.success('Successfully Updated', '', {});
+        })
+      }
+    }
+  };
+
+  updateProfileDetails(value) {
+    this.profile =
+    {
+      "useraccountId": this.userDetail.userid,
+      "firstname": this.profileDetails.firstname,
+      "lastname": this.profileDetails.lastname,
+      "email": this.profileDetails.email,
+      "street1": this.profileDetails.street1,
+      "street2": this.profileDetails.street2,
+      "city": this.profileDetails.city,
+      "country": this.profileDetails.country,
+      "state": this.profileDetails.state,
+      "zipcode": this.profileDetails.zipcode,
+      "phone": this.profileDetails.phone,
+      "defaultunit": this.defaultvalue,
+      "nickname":this.profileDetails.nickname,
+      "image": this.profileDetails.Profilepicture
+    }
+    if (this.profileDetails.email !=this.userDetail.username)
+    {
+      this.toast.error('Email Mismatch', '', {});
+    }
+else{
+    const profileJson= this.userService.encrypt(this.profile)
+    if(profileJson){
+    this.userService.profiledata(profileJson).subscribe(
+      data => {
+
+        if (data == "success") {
+          this.toast.success('Successfully Updated', '', {});
+        } else {
+          this.toast.error('upload only images', '', {});
+        }
+      })
+    }
+  }
+  };
+
+  clientList: any;
+  geteditprofile() {
+    var userid ={
+      "useraccountid":this.userDetail.userid
+    }
+    const userDetail= this.userService.encrypt(userid)
+    if(userDetail){
+    this.userService.editprofile(userDetail).subscribe(data => {
+      this.clientList = data;
+      this.profileDetails.phone = this.clientList.phone;
+      this.profileDetails.street1 = this.clientList.street1;
+      this.profileDetails.nickname=this.clientList.nickname
+      this.profileDetails.street2 = this.clientList.street2;
+      this.profileDetails.city = this.clientList.city;
+      this.profileDetails.state = this.clientList.state;
+      this.profileDetails.country = this.clientList.country;
+      this.profileDetails.zipcode = this.clientList.zipcode;
+      this.defaultunit = this.clientList.defaultunit
+      this.profileDetails.Profilepicture = this.clientList.Profilepicture
+      this.defaultvalue = this.clientList.defaultunit
+    })
+   }
+  };
+
+  changpass() {
+    this.router.navigate([`/changepwd`]);
+  };
+
+  defaultvalue: any;
+  createDocName(e) {
+    this.defaultvalue = e.target.value
+  };
+  gotoreport(){
+    this.router.navigate(['/client/report'])
+  }
+}
+
+
