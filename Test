@@ -3488,3 +3488,1098 @@ else{
 }
 
 
+manageuser.html
+
+<div class="air__layout">
+  <div class="air__layout__header" style="background: transparent !important;">
+    <div class="air__utils__header">
+      <div class="air__layout__content bg-light">
+        <div class="air__utils__content manageusersec" style="padding: 0.5rem 2rem 2rem 2rem;">
+
+          <div class="col-lg-12">
+            <div class="card flex-fill">
+              <div class="card-header card-header-flex flex-wrap">
+                <div class="d-flex align-items-stretch mr-auto">
+                  <ul class="nav nav-tabs nav-tabs-line nav-tabs-line-bold nav-tabs-noborder nav-tabs-stretched">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="javascript: void(0);" (click)="manageType = 'user'"
+                        data-toggle="tab">Manage User</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="javascript: void(0);" (click)="manageType = 'bu'"
+                        data-toggle="tab">Manage Business unit </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="javascript: void(0);" data-toggle="tab"
+                        (click)="manageType = 'dc'">Manage Document Code</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="javascript: void(0);" data-toggle="tab"
+                        (click)="manageType = 'combu'">Common Doc To Bu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="javascript: void(0);" data-toggle="tab"
+                        (click)="manageType = 'bulk'">Bulk Doc Assign</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="javascript: void(0);" data-toggle="tab"
+                        (click)="manageType = 'vgs'">Virtual Groupdoc Setup</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="javascript: void(0);" data-toggle="tab"
+                        (click)="manageType = 'stp'">Staging to Production</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="card-body">
+                <ng-container *ngIf="manageType == 'stp'">
+                  <dx-data-grid id="gridContainer" [columnAutoWidth]="true" [allowColumnResizing]="true"
+                    [allowColumnReordering]="true" [dataSource]="stagingproductlist" [showBorders]="false">
+                    <dxo-header-filter [visible]="false"></dxo-header-filter>
+                    <dxo-search-panel [visible]="true" width="150"></dxo-search-panel>
+                    <dxo-paging [pageSize]="12"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                    </dxo-pager>
+                    <dxi-column dataField="DocumentType" [allowSearch]="false" caption="#" 
+                      cellTemplate="cellTemplatetypeid" dataType="string">
+                    </dxi-column>
+                    <dxi-column dataField="BusinessUnitCode"  caption="Business Unit Code" dataType="string">
+                    </dxi-column>
+                    <dxi-column dataField="DocCode"  [allowSearch]="false" caption="Doc Code"
+                      dataType="string">
+                    </dxi-column>
+                    <dxi-column dataField="SystemName"  [allowSearch]="false" caption="System Name"
+                      dataType="string">
+                    </dxi-column>
+                    <dxi-column dataField="ApprovedDate"  [allowSearch]="false" caption="Approved Date"
+                      dataType="date" format="MM-dd-yyyy HH:MM">
+                    </dxi-column>
+                    <dxi-column dataField="CreateDate"  [allowSearch]="false" caption="Create Date"
+                      dataType="date" format="MM-dd-yyyy HH:MM">
+                    </dxi-column>
+                    <dxi-column type="buttons" headerCellTemplate="">
+                      <dxi-button template="submit4approval">
+                        <div class="selecteddivs">
+                          <div style="padding-top: 7px;position: relative;"
+                            *dxTemplate="let frmid of 'submit4approval'">
+                            <a (click)="btnsubmitClick(frmid)" class="editbtn"
+                              style="padding-right: 5px;word-break: keep-all;" tooltip="Submit" placement="top"
+                              container="body"> Submit
+                            </a>
+                            <span style="position: relative;cursor:pointer" (click)="showmorediv(frmid)"> <img src="./assets/svg/moreicon.svg"
+                              alt="" style=" width:25px; height:20px;margin: 0px 0px 0px 10px;" /></span> 
+                          
+                         <div class="selecteddivs" *ngIf="frmid.data.formassignedId==selectedid && moredivshow">
+                           
+                            <a (click)="btnEditClick(frmid)" style="padding-right: 5px;">
+                              <span class="mdi mdi-file-lock"
+                              style="font-size: 29px;color: #6EACAF; cursor:pointer;" tooltip="Editor"
+                                placement="top" container="body"></span>
+                            </a>
+                            <a (click)="btnPDFClick(frmid)" style="padding-right: 5px;">
+                              <span class="mdi mdi-file-pdf"
+                              [ngStyle]="frmid.data.DocumentType===1 ||frmid.data.DocumentType===2  ?{'color': '#6EACAF', 'cursor':'pointer'} : {'color': '#87cefa8c', 'cursor':'default'}"
+                              style="font-size: 29px; cursor:pointer;" tooltip="PDF"
+                                placement="top" container="body"></span>
+                            </a>
+                            <a (click)="btnHTMLClick(frmid)" style="padding-right: 5px;">
+                              <span class="mdi mdi-file-check"
+                              [ngStyle]="frmid.data.DocumentType===2 ? {'color': '#6EACAF', 'cursor':'pointer'} : {'color': '#87cefa8c', 'cursor':'default'}"
+                                style="font-size: 29px;" tooltip="HTML" placement="top" container="body"></span>
+                            </a>
+                            <a (click)="btnJSONClick(frmid)" style="padding-right: 5px;">
+                              <span class="mdi mdi-clipboard-text"
+                              [ngStyle]="frmid.data.DocumentType===1 ||frmid.data.formtypeid===3  ? {'color': '#6EACAF', 'cursor':'pointer'} : {'color': '#87cefa8c', 'cursor':'default'}"
+                                style="font-size: 29px;" tooltip="JSON" placement="top" container="body"></span>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      </dxi-button>
+                    </dxi-column>
+                    <div *dxTemplate="let data of 'cellTemplatetypeid'">
+                      <img *ngIf="data.data.DocumentType === 1" class='logo' src='./assets/svg/structured-doc-icon.svg'
+                        alt="" tooltip="Structured Document" placement="top" container="body">
+                      <img *ngIf="data.data.DocumentType === 3" class='logo'
+                        src='./assets/svg/assessment_survey-icon.svg' alt="" tooltip="Survey Document" placement="top"
+                        container="body">
+                      <img *ngIf="data.data.DocumentType === 2" class='logo'
+                        src='./assets/svg/unstructured-doc-cion.svg' alt="" tooltip="Unstructured Document"
+                        placement="top" container="body">
+                    </div>
+                  </dx-data-grid>
+                </ng-container>
+                <ng-container *ngIf="manageType == 'user'">
+                    <div class="d-md-flex align-items-center">
+                    <div class="col-lg-12 text-right">
+                    <button class="btn btn-info waves-effect waves-light"  style=" background-color: #6EACAF !important; border-color:#6EACAF !important; font-size:13px; margin-bottom: 8px;
+            border: #6eacaf;
+            position: absolute;
+            right: 160px;cursor:pointer;   
+            padding: 8px 20px;" 
+                (click)="BtnMerge()">Create New User</button>
+                </div>
+                  </div>
+                    <dx-data-grid id="gridContainer" [columnAutoWidth]="true" [dataSource]="clientList"
+                      [showBorders]="false">
+                      <dxo-filter-row [visible]="false"></dxo-filter-row>
+                      <dxo-header-filter [visible]="false"></dxo-header-filter>
+                      <dxo-search-panel [visible]="true" width="150"></dxo-search-panel>
+                      <dxo-paging [pageSize]="10"></dxo-paging>
+                      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+                      </dxo-pager>
+                      <rowTemplate="rowTemplateName">
+                        <dxi-column dataField="Profilepicture" caption="#" cellTemplate="cellTemplateprofile"
+                          dataType="string">
+                        </dxi-column>
+                        <dxi-column dataField="Name" caption="Name" cellTemplate="cellTemplateImage" dataType="string">
+                        </dxi-column>
+                        <dxi-column dataField="UserName" dataType="string">
+                        </dxi-column>
+                        <dxi-column dataField="City" caption="Location" dataType="string">
+                        </dxi-column>
+                        <dxi-column dataField="Status" dataType="string" cellTemplate="cellTemplatetypeid">
+                        </dxi-column>
+                        <dxi-column type="buttons" headerCellTemplate="Actions">
+                          <dxi-button template="UserName">
+                            <div *dxTemplate="let frmid of 'UserName'">
+                              <a (click)="openModal(templateEdit,frmid)" class="editbtn"
+                                style="padding-right: 5px;word-break: keep-all;cursor:pointer;" 
+                                container="body"> Edit
+                              </a>
+                            </div>
+                          </dxi-button>
+                        </dxi-column>
+                        <dxo-pager [showPageSizeSelector]="false" [allowedPageSizes]="[8, 12, 20]"></dxo-pager>
+                        <div *dxTemplate="let data of 'cellTemplateImage'">
+
+                          <div class="d-flex no-block align-items-center">
+
+                            <div class="">
+                              <h5 class="m-b-0 font-16 font-medium">{{data.data.Name}}</h5><span>
+                                {{data.data.Role}}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div *dxTemplate="let data of 'cellTemplatetypeid'">
+                          <label class="switch" *ngIf="togglevalue(data.value)">
+                            <input type="checkbox" id="togBtn" (click)="statustoggle(data.data.useraccountid)"
+                              [(ngModel)]="togglestatus">
+                            <div class="slider round">
+                              <!--ADDED HTML -->
+                              <span class="off">DeActive</span>
+                              <span class="on">Active</span>
+                              <!--END-->
+                            </div>
+                          </label>
+
+
+
+                        </div>
+                        <div *dxTemplate="let data of 'cellTemplateprofile'">
+                          <div class="d-flex no-block align-items-center">
+                            <div class="kit__utils__avatar">
+                              <img [src]="data.data.Profilepicture" style="width: 41px;" alt="">
+
+                            </div>
+                          </div>
+                        </div>
+
+
+                    </dx-data-grid>
+                    <ng-template #templateEdit>
+                      <div class="modal-header">
+                        <h4 class="modal-title pull-left">User Information</h4>
+                        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group row p-b-15">
+                          <label class="col-sm-2 text-left control-label col-form-label">First Name
+                            <span style="color: red;">*</span></label>
+                          <div class="col-sm-4">
+                            <input class="form-control" required id="inputl3" type="text" name="firstname"
+                              [(ngModel)]="fstname" #firstnames="ngModel">
+
+                            <div class="errorlab" *ngIf="firstnames.touched">
+                              <div class="form-text" [hidden]="!firstnames.hasError ('required')"> Please enter the
+                                firstname</div>
+                            </div>
+                          </div>
+                          <label class="col-sm-2 text-left control-label col-form-label">Last Name
+                            <span style="color: red;">*</span></label>
+                          <div class="col-sm-4">
+                            <input class="form-control" required id="inputl3" type="text" name="lastname"
+                              [(ngModel)]="lastname" #lastnames="ngModel">
+
+                            <div class="errorlab" *ngIf="lastnames.touched">
+                              <div class="form-text" [hidden]="!lastnames.hasError ('required')"> Please enter the
+                                lastname</div>
+                            </div>
+
+                          </div>
+
+
+                        </div>
+                        <div class="form-group row p-b-15">
+                          <label class="col-sm-2 text-left control-label col-form-label">Street1</label>
+                          <div class="col-sm-4">
+                            <input class="form-control" required id="inputl3" type="text" name="Street1"
+                              [(ngModel)]="street1">
+
+                          </div>
+                          <label class="col-sm-2 text-left control-label col-form-label">Street2</label>
+                          <div class="col-sm-4">
+                            <input class="form-control" required id="inputl3" type="text" name="Street2"
+                              [(ngModel)]="street2">
+
+                          </div>
+                        </div>
+                        <div class="form-group row p-b-15">
+                          <label class="col-sm-2 text-left control-label col-form-label">City</label>
+                          <div class="col-sm-4">
+                            <input class="form-control" required id="inputl3" type="text" name="City"
+                              [(ngModel)]="city">
+
+                          </div>
+                          <label class="col-sm-2 text-left control-label col-form-label">Country</label>
+                          <div class="col-sm-4">
+                            <input class="form-control" required id="inputl3" type="text" name="Country"
+                            appAlphabetOnly Onlycharacters="true"   [(ngModel)]="country">
+
+                          </div>
+
+                        </div>
+                        <div class="form-group row p-b-15">
+                          <label class="col-sm-2 text-left control-label col-form-label">State</label>
+                          <div class="col-sm-4">
+                            <input class="form-control" required id="inputl3" type="text" name="State"
+                            appAlphabetOnly Onlycharacters="true"  [(ngModel)]="state">
+
+                          </div>
+                          <label class="col-sm-2 text-left control-label col-form-label">Zipcode</label>
+                          <div class="col-sm-4">
+                            <input class="form-control" required id="inputl3" type="text" OnlyNumber="true"
+                              name="zipcode" [(ngModel)]="zipcode">
+
+                          </div>
+
+                        </div>
+                        <div class="form-group row p-b-15">
+                          <label class="col-sm-2 text-left control-label col-form-label">Phone</label>
+                          <div class="col-sm-4">
+                            <input class="form-control" minlength="10" maxlength="15" required id="inputl3" type="text" name="Phone"
+                            OnlyNumber="true"  [(ngModel)]="phone">
+                            <span *ngIf="onKey(phone)" class="form-text text-danger">Phone No must be 10 numbers</span>
+                          </div>
+
+                        </div>
+                        <h4 class="card-title">User Account Information</h4>
+                        <div class="form-group row p-b-15">
+                          <label class="col-sm-2 text-left control-label col-form-label" for="inputEmail3">User
+                            Name</label>
+                          <label class="text-left control-label col-form-label">{{username}}</label>
+                        </div>
+
+                        <div class="form-group row p-b-15">
+                          <label class="col-sm-2 text-left control-label col-form-label" for="defaultunit"> Default
+                            Unit</label>
+
+
+                          <div class="col-lg-6 col-xs-3">
+                            <select required name="Businessunit" [(ngModel)]="defaultunit"
+                              (change)="createDocName($event)" class="custom-select form-control">
+
+                              <option *ngFor="let item of defaultarray" [selected]="item.Description== defaultunit">
+                                {{item.Description}}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-group row p-b-15">
+                          <label class="col-sm-2 text-left control-label col-form-label" for="userrcategory">User
+                            Category</label>
+                          <div class="col-lg-6 col-xs-3">
+                            <select required name="usercategory" [(ngModel)]="categoryvalue"
+                              (change)="usercategorychanges($event)" class="custom-select form-control">
+                              <option *ngFor="let item of userarray" [selected]="item.name== userrcategory">
+                                {{item.name}}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="card-body" style="padding: 0.25rem !important;">
+                          <h4 class="card-title">User Account Access</h4>
+                          <div>
+                          </div>
+                          <div class="form-group row p-b-15" style="padding-bottom: 2px;" >
+                            <label class="col-sm-4 text-left control-label col-form-label">Dashboard
+                             
+                            </label>
+                            
+                            <div class="col-sm-2" >
+                              <label class="switchs" style="cursor: not-allowed;"  >
+                              <input type="checkbox"  (click)="errpop('dashboard')"  [(ngModel)]="dashboardstatus" >
+                              <div class="sliders rounds" style="cursor: not-allowed;" >
+                                <span class="offs"></span>
+                                <span class="ons"></span>
+                              </div>                            
+                            </label>
+                            </div>
+                            
+<label class="col-sm-4 text-left control-label col-form-label">Image Gallery  
+  
+</label>
+ 
+<div class="col-sm-2" >
+  <label class="switchs" style="cursor: not-allowed;" >
+  <input type="checkbox"  (click)="errpop('imagegallery')"  [(ngModel)]="imagegalerystatuss" >
+  <div class="sliders rounds" style="cursor: not-allowed;" >
+    <span class="offs"></span>
+    <span class="ons"></span>
+  </div>
+ 
+</label>
+                            </div>
+                          </div>
+                          <div class="form-group row p-b-15" style="padding-bottom: 2px;">
+
+                            <label class="col-sm-4 text-left control-label col-form-label">Library Document</label>
+                            <div class="col-sm-2">
+                              <label class="switchs">
+                                <input type="checkbox" id="togBtn" (click)="toggle('library')"
+                                  [(ngModel)]="librarystatus">
+                                <div class="sliders rounds">
+                                  <span class="offs"></span>
+                                  <span class="ons"></span>
+                                </div>
+                              </label>
+                            </div>
+
+                            <label class="col-sm-4 text-left control-label col-form-label">Admin</label>
+                            <div class="col-sm-2">
+                              <label class="switchs">
+                                <input type="checkbox" id="togBtn" (click)="toggle('admin')" [(ngModel)]="adminstatus">
+                                <div class="sliders rounds">
+                                  <span class="offs"></span>
+                                  <span class="ons"></span>
+                                </div>
+                              </label>
+
+                            </div>
+                          </div>
+                          <div class="form-group row p-b-15">
+                            <label class="col-sm-4 text-left control-label col-form-label">My Document</label>
+                            <div class="col-sm-2">
+                              <label class="switchs">
+                                <input type="checkbox" id="togBtn" (click)="toggle('mydoc')" [(ngModel)]="mydocstatus">
+                                <div class="sliders rounds">
+                                  <span class="offs"></span>
+                                  <span class="ons"></span>
+                                </div>
+                              </label>
+                            </div>
+                            <label class="col-sm-4 text-left control-label col-form-label">Reports</label>
+                            <div class="col-sm-2">
+                              <label class="switchs">
+                                <input type="checkbox" id="togBtn" [(ngModel)]="reportstatus">
+                                <div class="sliders rounds">
+                                  <span class="offs"></span>
+                                  <span class="ons"></span>
+                                </div>
+                              </label>
+                            </div>
+                          </div>
+                          <div class="form-group row p-b-15">
+
+                            <label class="col-sm-4 text-left control-label col-form-label">Data Dictionary</label>
+                            <div class="col-sm-2">
+                              <label class="switchs">
+                                <input type="checkbox" id="togBtn" (click)="toggle('datadict')"
+                                  [(ngModel)]="datadictstatus">
+                                <div class="sliders rounds">
+                                  <span class="offs"></span>
+                                  <span class="ons"></span>
+                                </div>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div style="text-align: center;">
+                          <button [disabled]="fstname == '' || lastname == '' || onKey(phone)"
+                            class="save_btn btn btn-rounded btn-primary mr-2" (click)="saveopenModal(template)"
+                            style="background-color: #6EACAF !important; border-color: #6EACAF;"
+                            type="Save">Save</button>&nbsp;&nbsp;
+                          <button type="button" class="cancel_btn btn btn-rounded btn-primary mr-2"
+                            style="background-color: #c9656a !important ;border-color: #c9656a;"
+                            (click)="modalRef.hide()" type="Close">Close</button>
+                        </div>
+                      </div>
+
+                    </ng-template>
+                    <ng-template #template>
+                      <div class="modal-header">
+                        <h4 class="modal-title pull-left">Are you sure you want to save the changes?</h4>
+                        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+
+                        <div style="text-align: center;">
+
+                          <button class="save_btn btn btn-rounded btn-primary mr-2"
+                            style="background-color: #6EACAF !important; border-color: #6EACAF;"
+                            (click)="submitbutton()" type="button">OK</button>&nbsp;&nbsp;
+                          <button type="button" class="cancel_btn btn btn-rounded btn-primary mr-2"
+                            style="background-color: #c9656a !important ;border-color: #c9656a;"
+                            (click)="decline()">Cancel</button>
+                        </div>
+                      </div>
+
+                    </ng-template>
+                </ng-container>
+                <ng-container *ngIf="manageType == 'bu'">
+                  <app-business-unit></app-business-unit>
+                </ng-container>
+                <ng-container *ngIf="manageType == 'dc'">
+                  <app-document-code></app-document-code>
+                </ng-container>
+                <ng-container *ngIf="manageType == 'combu'">
+                  <app-commondoc-bu></app-commondoc-bu>
+                </ng-container>
+                <ng-container *ngIf="manageType == 'bulk'">
+                  <app-bulkdocassigntobu></app-bulkdocassigntobu>
+                </ng-container>
+                <ng-container *ngIf="manageType == 'vgs'">
+                  <app-virtualgroupdoc-setup></app-virtualgroupdoc-setup>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+manageuser.ts
+
+import { Component, OnInit,TemplateRef } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
+
+import { UserService } from '../../../../shared/services/user.service';
+import {ParamMap, Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
+@Component({
+selector: 'app-manageuser',
+templateUrl: './manageuser.component.html',
+styleUrls: ['./manageuser.component.scss']
+})
+export class ManageuserComponent implements OnInit {
+stagingproductlist: any;
+selectedid: any;
+moredivshow: boolean=false;
+constructor(private userService: UserService, private toast: ToastrService,private router: Router,private modalService: BsModalService) { }
+passwordDetails: any = {}
+profileDetails: any = {}
+manageType:any = 'user'
+togglestatuss:boolean=true;
+dashboardstatus:boolean=true;
+imagegalerystatuss:boolean=true;
+librarystatus:boolean=true;
+adminstatus:boolean=true;
+mydocstatus:boolean=true;
+reportstatus:boolean=true;
+datadictstatus:boolean=true;
+ngOnInit() {
+this.getManageUserData();
+  this.passwordDetails = {
+    oldpasswordmod: "",
+    newpasswordmod: "",
+    confirmPasswordmod: ""
+  }
+  this.userService.getStagingtoProductionData().subscribe(data => {
+    this.stagingproductlist = data;
+  })
+}
+showmorediv(frmid){
+    this.selectedid=frmid.data.formassignedId;
+    this.moredivshow=!this.moredivshow;
+  }
+  propertydata: any;
+  btnEditClick(event) {
+    var obje = {
+      "routerpage":"staging_pro",
+      "tablename":"library",
+      "content":"notEditable",
+      "designid": event.data.formproductId,
+      "mode": "edit",
+      "formtypeid": event.data.DocumentType
+    }
+    this.userService.changeNav(obje)
+    if (event.data.DocumentType === 1) this.router.navigate([`/designbuilder`]);
+
+    else if (event.data.DocumentType === 2) this.router.navigate([`/htmldocbuilder`]);
+
+    else if (event.data.DocumentType === 3) this.router.navigate([`/surveybuilder`]);
+  }
+  pdfid: any
+  name: any
+  tablename="library"
+  btnPDFClick(e3) {
+ if (e3.data.DocumentType === 1) {
+ this.userService.downloadPDFstructdoc(e3.data.formproductId,this.tablename).subscribe( response => {
+ let blob: any = new Blob([response.blob()], { type: "application/pdf;" });
+const url = window.URL.createObjectURL(blob);
+   window.open(url);
+  },
+error =>{
+   alert("PDF file not found for the selected document. Please try again later.")
+ })
+ }
+ if (e3.data.DocumentType === 2 || e3.data.DocumentType === 3){
+ this.userService.DownloadPDFFile(e3.data.formproductId,this.tablename).subscribe( responsef => {
+ let blob00: any = new Blob([responsef.blob()], { type: 'application/PDF;' });
+ const url00 = window.URL.createObjectURL(blob00);
+  window.open(url00);
+ },
+ error =>{
+alert("PDF file not found for the selected document. Please try again later.")
+ })
+ }
+ }
+  
+toggle(event){
+                        
+  if(event=="dashboard"){
+    this.dashboardstatus=!this.dashboardstatus;
+  }
+  else if(event=="imagegallery"){
+    this.imagegalerystatuss=!this.imagegalerystatuss
+    
+  }
+  else if(event=="library"){
+    this.librarystatus=!this.librarystatus
+    
+  }
+  else if(event=="admin"){
+    this.adminstatus=!this.adminstatus
+    
+  }
+  else if(event=="mydoc"){
+    this.mydocstatus=!this.mydocstatus
+    
+  }
+  else if(event=="report"){
+    console.log("event1",this.reportstatus)
+    this.reportstatus=!this.reportstatus
+    console.log("event2",this.reportstatus)
+    // this.reporttab=!this.reporttab
+    // this.reporttab=true
+    
+  }
+  else if(event=="datadict"){
+    this.datadictstatus=!this.datadictstatus
+    
+  }
+  else{
+    // this.dashboardstatus=this.dashboardstatus;
+    
+  }
+}
+  btnHTMLClick(event) {
+
+
+  
+  if (event.data.DocumentType === 2) {
+    
+    var pdfid = event.data.formproductId
+    this.downloadlink(pdfid)
+    this.name = "html"
+  }
+  
+
+
+}
+
+togglestatusss:boolean=false;
+dashboard(){
+  this.togglestatusss=true;
+  return true
+}
+imagegallerys(){
+  this.togglestatusss=true;
+  return true
+}
+
+dashpopvalue:any;
+imagegalleryy:any;
+errpop(event){
+  if(event=="dashboard"){
+
+    console.log("dashboard status", event)
+    this.dashpopvalue="Selected one was fixed"
+    return false
+  }
+  else if(event=="imagegallery"){
+
+    console.log("dashboard status", event)
+    this.imagegalleryy="Selected one was fixed"
+    return false
+  }
+  
+
+}
+typeid: any;
+btnJSONClick(event) {
+
+  this.typeid = event.data.DocumentType
+
+  if (event.data.DocumentType === 1 || event.data.DocumentType === 3) {
+    var pdfid = event.data.formproductId
+    this.downloadlink(pdfid)
+    this.name = "json"
+
+  }
+}
+api_url: any = environment.swagss;
+downloadlink(pdfid) {
+  var tablename="formproduct"
+  this.userService.downloadPDF(pdfid,tablename).subscribe(
+    (res) => {
+  
+      
+        if (this.name === "html") {
+        if (res.html === "Not Found") {
+          alert("HTML file not found for the selected document. Please try again later.");
+
+        }
+        else {
+          // var fileURL = URL.createObjectURL(res.pdf);
+
+          let blob: any = new Blob([res.blob()], { type: "application/pdf;" });
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);          }
+        
+      }
+      else if (this.name === "json") {
+        if (res.Actjson === "Not Found") {
+          alert("JSON not found for the selected document. Please try again later.");
+
+        }
+        else {
+          var myjson = JSON.stringify(res.Actjson, null, 2);
+        
+          var xdd = window.open();
+          xdd.document.open();
+          xdd.document.write('<html><body><pre>' + myjson + '</pre></body></html>');
+          xdd.document.close();
+          //  window.open(JSON.stringify(res.Actjson));
+        }
+        // // var fileURL = URL.createObjectURL(res.pdf);
+        //  window.open(this.api_url+res.Actjson);
+      }
+    }
+  );
+}
+BtnMerge(){
+  this.router.navigate([`/client/adminct/createnewuser`]);
+}
+dclientList:any;
+clientList: any;
+
+modalRef: BsModalRef;
+getManageUserData() {
+this.userService.getManageUserData().subscribe(data => {
+  this.clientList = data;
+  // console.log("manage user",this.clientList)
+  
+
+})
+}
+onKey(value){
+  if(value.length >= 10 || value.length ==0)
+    return false;
+  else
+    return true;
+}
+onKey2(event: any) {
+  var lowerCaseLetters = /[a-z]/g;
+  var upperCaseLetters = /[A-Z]/g;
+  var numbers = /[0-9]/g;
+  var special = /[#$^+=!*()@%&]/g;
+  if (event.target.value.match(lowerCaseLetters)) {
+    this.passlast = true
+  }
+  else {
+    this.passlast = false
+  }
+  if (event.target.value.match(upperCaseLetters)) {
+    this.passlast1 = true
+  }
+  else {
+    this.passlast1 = false
+  }
+  if (event.target.value.match(numbers)) {
+    this.passlast2 = true
+  }
+  else {
+    this.passlast2 = false
+  }
+  if (event.target.value.length >= 8) {
+    this.passlast3 = true
+  }
+  else {
+    this.passlast3 = false
+  }
+  if (event.target.value.match(special)) {
+    this.passlast4 = true
+  }
+  else {
+    this.passlast4 = false
+  }
+}
+fstname:any;
+lastname:any;
+street1:any;
+street2:any;
+userrcategory:any;
+zipcode:any;
+username:any;
+state:any;
+country:any;
+city:any;
+phone:any;
+defaultunit:any;
+useracc:any;
+
+getManageUserEditData(){
+this.userService.getManageUserEditData(this.id).subscribe(data => {
+  this.dclientList = data;
+
+    //  console.log("manageuserdetails",data)
+  this.phone=data.phone
+  this.city=data.city
+  this.country=data.country
+  this.state=data.state
+  this.username=data.username
+  this.fstname=data.firstname
+  this.lastname=data.lastname
+  this.street1=data.street1
+  this.street2=data.street2
+  this.userrcategory=data.usercategory
+  this.zipcode=data.zipcode
+  this.defaultunit=data.defaultunit
+  this.useracc=JSON.parse(data.useraccess)
+  this.dashboardstatus=this.useracc.Dashboard
+  this.librarystatus=this.useracc.Library
+  this.mydocstatus=this.useracc.Mydocument
+  this.imagegalerystatuss=this.useracc.Imagegallery
+  this.adminstatus=this.useracc.Admin
+  this.datadictstatus=this.useracc.Datadictionary
+  this.defaultvalue=data.defaultunit
+  this.categoryvalue=data.usercategory
+  this.reportstatus=this.useracc.Report
+})
+// console.log("usercategory details",this.usercategory)
+}
+togglestatus:any;
+togglevalue(value){
+if(value=="Active"){
+  this.togglestatus=true
+}
+else{
+  this.togglestatus=false
+}
+return true
+}
+
+passval: boolean = true;
+passval1: boolean = true;
+passval2: boolean = true;
+passval3: boolean = true;
+passval4: boolean = true;
+passkey: boolean = true;
+passkey1: boolean = true;
+passkey2: boolean = true;
+passkey3: boolean = true;
+passkey4: boolean = true;
+passlast: boolean = true;
+passlast1: boolean = true;
+passlast2: boolean = true;
+passlast3: boolean = true;
+passlast4: boolean = true;
+onKey1(event: any) {
+  var lowerCaseLetters = /[a-z]/g;
+  var upperCaseLetters = /[A-Z]/g;
+  var numbers = /[0-9]/g;
+  var special = /[#$^+=!*()@%&]/g;
+  if (event.target.value.match(lowerCaseLetters)) {
+    this.passkey = true
+  }
+  else {
+    this.passkey = false
+  }
+  if (event.target.value.match(upperCaseLetters)) {
+    this.passkey1 = true
+  }
+  else {
+    this.passkey1 = false
+  }
+  if (event.target.value.match(numbers)) {
+    this.passkey2 = true
+  }
+  else {
+    this.passkey2 = false
+  }
+  if (event.target.value.length >= 8) {
+    this.passkey3 = true
+  }
+  else {
+    this.passkey3 = false
+  }
+  if (event.target.value.match(special)) {
+    this.passkey4 = true
+  }
+  else {
+    this.passkey4 = false
+  }
+
+
+}
+firstnamee:any;
+lastnamee:any;
+streett1:any;
+streett2:any;
+phonee:any;
+cityy:any;
+countryy:any;
+zipcodee:any;
+statee:any;
+usernamee:any;
+userrcategoryy:any;
+defaultunitt:any;
+id:any;
+
+openModal(templateEdit: TemplateRef<any>,frmid) {
+
+// console.log("formid",frmid)
+this.modalRef = this.modalService.show(templateEdit,
+    Object.assign({}, { class: 'modal-lg' }));
+    this.id=frmid.key.useraccountid
+
+    this.getManageUserEditData()
+    this.defaultunitdata()
+    
+}
+
+useraccountid:any;
+rolecategryid:any;
+openModalinfo(templateActions,frmid){
+
+this.modalRef = this.modalService.show(templateActions,
+    Object.assign({}, { class: 'modal-lg' }));
+this.useraccountid=frmid.data.useraccountid
+this.rolecategryid=frmid.data.rolecategoryid
+
+}
+defaultarray:any=[];
+businessUnitdata: any;
+defaultunitdata(){
+this.userService.getdefaultunitData().subscribe(data => {
+  // this.clientList = data;
+  const map = new Map();
+//  console.log("default unit ",data)
+  this.usercategorydata()
+    for (const item of data) {
+      if (!map.has(item.description)) {
+        map.set(item.description, true);
+        this.defaultarray.push({
+          Id: item.id,
+          Description: item.description,
+
+        });
+      }
+
+    }
+    this.businessUnitdata=this.defaultarray[0].Description
+    // console.log("defaultunitdata",this.defaultarray)
+  
+      });
+}
+defaultvalue:any;
+createDocName(e) {
+
+this.defaultvalue=e.target.value
+}
+userarray:any=[]
+usercategory:any ="-1";
+usercategorydata(){
+this.userService.getusercategory().subscribe(data => {
+  // this.clientList = data;
+  
+  const map = new Map();
+  
+  // console.log("usercategory",data)
+    for (const item of data) {
+      if (!map.has(item.name)) {
+        map.set(item.name, true);
+        this.userarray.push({
+          Id: item.id,
+          name: item.name,
+
+        });
+      }
+
+    }
+    
+          this.usercategory = this.userarray[0].name;
+          // console.log("usercategorydata",this.userarray)
+      });
+}
+categoryvalue:any;
+usercategorychanges(e) {
+
+  this.categoryvalue=e.target.value
+  // console.log("category value",this.categoryvalue)
+}
+saveopenModal(template: TemplateRef<any>) {
+// this.modalRef = this.modalService.show(templateActions);
+this.modalRef.hide();
+this.modalRef = this.modalService.show(template,
+    Object.assign({}, { class: 'modal-lg' }));
+    
+}
+submitbutton(){
+this.save()
+  this.modalRef.hide();
+}
+decline(): void {
+  
+  this.modalRef.hide();
+}
+searchText;
+save() {
+var savejson={
+"id": this.id,
+"firstname":this.fstname,
+"lastname": this.lastname,
+"street1":this.street1,
+"street2":this.street2,
+"city":this.city,
+"country":this.country,
+"state":this.state,
+"zipcode":this.zipcode,
+"phone":this.phone,
+"defaultunit":this.defaultvalue,
+"usercategory":this.categoryvalue,
+"useraccess":JSON.stringify({
+"Dashboard":this.dashboardstatus,
+"Imagegallery":this.imagegalerystatuss,
+"Library":this.librarystatus,
+"Admin":this.adminstatus,
+"Mydocument":this.mydocstatus,
+"Report":this.reportstatus,
+"Datadictionary":this.datadictstatus, 
+})
+}
+
+// console.log("savejson",savejson)
+this.userService.getManageUserSaveData(savejson).subscribe(data => {
+  // this.clientList = data;
+  if(data == "success"){
+    this.toast.success("Saved Successfully", " ", {
+      });
+      this.modalRef.hide();
+      // this.userService.clearSession();
+      // window.localStorage.removeItem('clientMasterId');
+      // window.localStorage.removeItem('clientMasterType');
+      // window.localStorage.removeItem('hspName');
+      // window.localStorage.clear();
+      this.router.navigate(['/client/clientdashboard/clientdashboardview']);
+  }
+  
+})
+}
+
+
+
+statustoggle(value){
+
+this.userService.manageuserstatus(value).subscribe(data => {
+  
+
+
+})
+}
+resetuserid:any;
+resetusername:any;
+openModalreset(templateReset,frmid){
+
+this.modalRef = this.modalService.show(templateReset,
+    Object.assign({}, { class: 'modal-lg' }));
+    this.resetuserid=frmid.data.useraccountid
+    this.resetusername=frmid.data.Name
+
+
+
+}
+savemodalreset(resetsave: TemplateRef<any>){
+this.decline()
+  this.modalRef = this.modalService.show(resetsave,
+    Object.assign({}, { class: 'modal-lg' }));
+}
+savepwd(){
+this.saveresetpasswrd()
+this.modalRef.hide();
+}
+idd:any;
+Password:any;
+confirmpassword:any;
+currentpassword:any;
+changepassword:any;
+saveresetpasswrd(){
+var savereset={
+  "id":this.resetuserid,
+"changepassword":this.passwordDetails.newpasswordmod,
+"confirmpassword":this.passwordDetails.confirmPasswordmod
+}
+//  console.log("savereset",savereset)
+  this.userService.resetpwd(savereset).subscribe(data => {
+  
+  this.toast.success("Saved Successfully", " ", {
+      });
+
+})
+this.passwordDetails.newpasswordmod="";
+this.passwordDetails.confirmPasswordmod="" 
+}
+
+designid: any;
+BuId:any;
+formassignedId:any;
+DocCode:any;
+btnsubmitClick(event) {
+  console.log(event)
+  this.designid = event.data.formproductId;
+  this.BuId = event.data.BuId;
+  this.formassignedId = event.data.formassignedId;
+  this.DocCode = event.data.DocCode;
+  
+  var obje = {
+    "formproductId":event.data.formproductId,
+    "BuId":event.data.BusinessUnitCode,
+    "formassignedId": event.data.formassignedId,
+    "DocCode": event.data.DocCode
+  }
+  this.userService.changeNav(obje)
+  this.router.navigate([`/client/masterlibrary/submit-stag-production`])
+}
+}
