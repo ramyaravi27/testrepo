@@ -5502,3 +5502,1076 @@ SSO_Pwd=window.localStorage.getItem('SSOP');
 }
 
 
+imagegallery.html
+
+<!DOCTYPE html>
+<html>
+  <head>
+  <title></title>
+</head>
+<body>
+<div class="air__layout__content bg-light" style="background: transparent !important;">
+  <div class="air__utils__content">
+    <div class="air__utils__heading" style="margin-bottom: 0.66rem !important;">
+      <div class="air__topbar__searchContainer float-right">
+        <em class="air__topbar__searchIcon fe fe-search" style="cursor:pointer"(click)="getSearchBoxValue(searchValue)"></em>
+        <input class="air__topbar__searchInput" type="text" placeholder="Start typing to search..." 
+        [(ngModel)]="searchValue" name="searchValue" autocomplete="off" (keyup)="getSearchBoxValue(searchValue)"  (paste)="getSearchBoxValueByPaste($event)"/>
+       </div>
+   </div>
+   <a href="javascript: void(0);" style="top: 5.6rem;"
+   class="air__sidebar__toggleButton air__sidebar__actionToggle air__sidebar__toggleButtonl"
+   (click)="leftsidepanel();activecheckbox('all')" placement="left" tooltip="Filters" container="body" *ngIf="!filterenable">
+   <em class="fe fe-filter" style="font-size: 21px;color: #6eacaf;"></em>
+ </a>
+ <div class="air__sidebarl air__sidebar kit__customScroll sidebarcontents" *ngIf="filterenable" style="width: 19rem;
+      position: fixed;
+      z-index: 9;
+      top: 5.6rem;
+      right: inherit;
+      box-shadow: none;
+      bottom: 0;
+      background: #f1f1f1;
+      transform: translateX(0px);
+      transition: all 0.2s ease-in-out;">
+              <div>
+                <a  href="javascript: void(0);" style="top: 0rem;left: inherit;right: -3rem;z-index: 999;background-color: #fff !important;box-shadow: none !important;width: 4rem;"
+                   class="air__sidebar__toggleButton air__sidebar__actionToggle air__sidebar__toggleButtonl_close"
+                   (click)="leftsidepanel();activecheckbox('all')" placement="right" tooltip="Clear Filters" container="body"
+                   (mouseover)="clear_filter='./assets/images/filter_hover.png'"
+                   (mouseout)="clear_filter='./assets/images/filter.png'">
+                  <img [src]="clear_filter" alt=""  style="width: 1.3rem;" />
+                </a>
+                <div  *ngIf="filterenable"  class="card ml-3 col-sm-12 mb-1" style="padding: 9px;">
+                  <h5>Filter Document By</h5>
+                </div>
+                <div  *ngIf="filterenable"  class="col-sm-12 mt-4" >
+                  <div class="accordion"  id="accordion" role="tablist" style="    clear: both; ">
+                    <div  class="card">
+                      <div  class="card-header collapsed"  role="tab" id="headingOne" data-toggle="collapse"
+                        data-parent="#accordion"  data-target="#collapseOne" aria-expanded="false"
+                         aria-controls="collapseOne">
+                        <div  class="card-title">
+                          <span  class="accordion-indicator pull-right">
+                            <em  class="plus fe fe-plus" ></em>
+                            <em  class="minus fe fe-minus" ></em>
+                          </span>
+                          Image Type 
+                        </div>
+                      </div>
+                      <div id="collapseOne" class="card-collapse collapse" aria-labelledby="headingOne">
+                        <div class="card-body customScroll" style="max-height: 200px !important;">
+                          <div class=" d-flex flex-wrap mb-4">
+                            <label class="kit__utils__control kit__utils__control__checkbox kit__gallery__control">
+                              <input type="checkbox" (change)="activecheckbox('all')" [checked]="allCheckBox==true" id="chAllCheckBox"  />
+                              <span class="kit__utils__control__indicator"></span>
+                              All
+                            </label>
+                            <label class="kit__utils__control kit__utils__control__checkbox kit__gallery__control">
+                              <input type="checkbox" (change)="activecheckbox('signature')"  [checked]="signatureCheckBox==true"  id="chSignatureCheckBox" />
+                              <span class="kit__utils__control__indicator"></span>
+                              Signature
+                            </label>
+                            <label class="kit__utils__control kit__utils__control__checkbox kit__gallery__control">
+                              <input type="checkbox" (change)="activecheckbox('logo')"  [checked]="logoCheckBox==true"   id="chLogoCheckBox"/>
+                              <span class="kit__utils__control__indicator"></span>
+                              Logo
+                            </label>
+                            <label class="kit__utils__control kit__utils__control__checkbox kit__gallery__control">
+                              <input type="checkbox" (change)="activecheckbox('other')"   [checked]="otherCheckBox==true"   id="chOtherCheckBox" />
+                              <span class="kit__utils__control__indicator"></span>
+                              Other
+                            </label>
+                            <label class="kit__utils__control kit__utils__control__checkbox kit__gallery__control">
+                              <input type="checkbox" (change)="activecheckbox('video')"   [checked]="videoCheckBox==true"   id="chVideoCheckBox" />
+                              <span class="kit__utils__control__indicator"></span>
+                              video
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="air__sidebar kit__customScroll" *ngIf="showsidebar">
+              <div class="air__sidebar__inner">
+                <a href="javascript: void(0);" (click)="openrightsidebar()"
+                  class="air__sidebar__close air__sidebar__actionToggle fe fe-x-circle"></a>
+                <h5>
+                  <strong>Upload Image</strong>
+                </h5>
+                <div class="cui__utils__line" style="margin-top: 2px; margin-bottom: 3px"></div>
+                <div class="air__sidebar__type" style="margin: 0.2rem 0 2rem;">
+                  <div class="air__sidebar__type__items">
+                    <div class="row">
+                        <div class=" pt-1" >
+                          <div class="form-group row"><label class="col-lg-3 text-right control-label col-form-label">Category</label>
+                            <div class="col-lg-9"><select class="form-control" (change)='changes($event)' [disabled]="LockDD">
+                                <option value="logo">Logo</option>
+                                <option value="signature">Signature</option>
+                                <option value="others">Others</option>
+                                <option value="video">videos</option>
+                              </select></div>
+                          </div>
+                          <div class="form-group row">
+                            <label class="col-lg-3 text-right control-label col-form-label" for="Upload">Upload</label>
+                            <div class="col-lg-9">
+                            <label for="FileChoosen" class="FileLabel">Click To Upload</label>
+                           <input type="file" style="display: none" #FileUpload id="FileChoosen" class="form-control" name="inputGroupFile01" (change)='onselect($event)' 
+                           [accept]="selectedoption === 'video'?'video/*':'image/*'"></div>
+                          </div>
+                          <div class="form-group row niceScroll" style="padding: 5px 25px;">
+                            <div class="kit__gallery__item " style="margin: 0 auto;" *ngFor='let url of urls;let i = index'>
+                              <div class="kit__gallery__itemContent" style="height: 8rem;">
+                                <div class="kit__gallery__itemControl">
+                                  <button type="button" class="btn" style="    top: 90%;
+                               left: 90%;
+                               position: relative;
+                               background: #c9656a;
+                               color: white;
+                               transform: translate(-50%, -50%);" (click)="removeUpload(url,i)">
+                                <em class="fe fe-trash"></em>
+                              </button>
+                                </div>
+                                <ng-container [ngSwitch]="url.Type">
+                                  <img *ngSwitchCase="'image'" [src]="url.link" alt="" style="width:100%;height: 20vh;"> 
+                                  <video *ngSwitchCase="'video'" width="185px" controlsList="nodownload nofullscreen noremoteplayback">   
+                                    <source [src]="url.link" accept="video/*">   
+                                    <track src="" kind="subtitles" srclang="en" label="English">
+                                  </video>
+                                </ng-container>
+                              </div>
+                            </div>
+                          </div>
+                          <button  class="btn btn-default greenbtn" type="Submit" (click)='upload()' name="upload" style="margin-left: 30%;" [disabled]="careimagearr1.length == 0">Upload Images</button>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    <div class="pull-right" style="margin-left: 25%;" [ngClass]="{'col-lg-11':!filterenable ,'col-lg-9':filterenable }">
+      <div style="position: relative;top: -1rem;">
+        <ng-container *ngFor="let filter of filter_value">
+          <span class="badge badge-secondary mr-2">{{filter}}</span>
+          <div class="img-wrap">
+            <span class="close" (click)="clearfilter();activecheckbox('all')">&times;</span>
+        </div>
+        </ng-container>
+        </div>
+      <div class="card-body">
+        <div class="kit__gallery">
+          <div class=" kit__gallery__items d-flex flex-wrap" >
+            <div class="kit__gallery__item" >
+              <div class="kit__gallery__itemContent bg-secondary">
+                <div class="kit__gallery__itemControl ">
+                  <div class="btn-group kit__gallery__itemControlContainer">
+                    <button type="button" class="btn" (click)="openrightsidebar()">
+                      <em class="fe fe-plus-circle"></em>
+                    </button>
+                  </div>
+                  <em class="fe fe-plus-circl text-white"></em>
+                </div>
+              </div>
+              <div class="text-gray-6">
+                <div>Select and Upload</div>
+              </div>
+            </div>
+        <ng-template [ngIf]="allCheckBox || signatureCheckBox">        
+            <div class="kit__gallery__item" *ngFor="let item of signatureImage">
+              <div class="kit__gallery__itemContent">
+                <div class="kit__gallery__itemControl">
+                  <div class="btn-group kit__gallery__itemControlContainer">
+                    <button type="button" class="btn" (click)="previewimage({type:item.category === 'video'?'video':'image',url:api_url+item.file},imagepopup)" tooltip="Preview">
+                      <em class="fe fe-eye"></em>
+                    </button> 
+                  </div>
+               <button type="button" class="btn" style="    top: 90%;
+               left: 68%;
+               position: relative;
+               background: #c9656a;
+               color: white;
+               transform: translate(-50%, -50%);" (click)="openModalDelete(delete_images,item)">
+                <em class="fe fe-trash"></em>
+              </button>
+                </div>
+                <img style="width:100%;height:auto;"  [src]="api_url +item.file"  alt="Cinque Terre"   (click)="zoomin($event)">
+              </div>
+              <div class="text-gray-6">
+                <div>{{item.filename}}</div>
+              </div>
+            </div>
+        </ng-template>
+        <ng-template [ngIf]="allCheckBox || logoCheckBox">
+        <div class="kit__gallery__item" *ngFor="let item of logoImage"  > 
+            <div class="kit__gallery__itemContent" >
+              <div class="kit__gallery__itemControl">
+                <div class="btn-group kit__gallery__itemControlContainer">
+                  <button type="button" class="btn" (click)="previewimage({type:item.category === 'video'?'video':'image',url:api_url+item.file},imagepopup)" tooltip="Preview">
+                    <em class="fe fe-eye"></em>
+                  </button> 
+                </div>
+             <button type="button" class="btn" style="    top: 90%;
+             left: 68%;
+             position: relative;
+             background: #c9656a;
+             color: white;
+             transform: translate(-50%, -50%);" (click)="openModalDelete(delete_images,item)">
+              <em class="fe fe-trash"></em>
+            </button>
+              </div>
+              <img  style="width: 100%;height:auto;" [src]="api_url +item.file"  alt="Cinque Terre"  (click)="zoomin($event)">
+            </div>
+            <div class="text-gray-6">
+              <div>{{item.filename}}</div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="allCheckBox || otherCheckBox">
+          <div class="kit__gallery__item" *ngFor="let item of otherImage" >
+              <div class="kit__gallery__itemContent" >
+                <div class="kit__gallery__itemControl">
+                  <div class="btn-group kit__gallery__itemControlContainer">
+                    <button type="button" class="btn" (click)="previewimage({type:item.category === 'video'?'video':'image',url:api_url+item.file},imagepopup)" tooltip="Preview">
+                      <em class="fe fe-eye"></em>
+                    </button> 
+                  </div>
+               <button type="button" class="btn" style="    top: 90%;
+               left: 68%;
+               position: relative;
+               background: #c9656a;
+               color: white;
+               transform: translate(-50%, -50%);" (click)="openModalDelete(delete_images,item)">
+                <em class="fe fe-trash"></em>
+              </button>
+                </div>
+                <img [src]="api_url +item.file" style="width: 100%;height: auto;" alt="Cinque Terre" (click)="zoomin($event)">
+              </div>
+              <div class="text-gray-6">
+              <div>{{item.filename}}</div>
+              </div>
+            </div>
+        </ng-template>
+        <ng-template [ngIf]="allCheckBox || videoCheckBox">
+          <div class="kit__gallery__item" *ngFor="let item of videoFiles"> 
+              <div class="kit__gallery__itemContent" >
+                <div class="kit__gallery__itemControl">
+                  <div class="btn-group kit__gallery__itemControlContainer">
+                    <button type="button" class="btn" (click)="previewimage({type:item.category === 'video'?'video':'image',url:api_url+item.file},imagepopup)" tooltip="Preview">
+                      <em class="fe fe-eye"></em>
+                    </button> 
+                  </div>
+               <button type="button" class="btn" style="    top: 90%;
+               left: 68%;
+               position: relative;
+               background: #c9656a;
+               color: white;
+               transform: translate(-50%, -50%);" (click)="openModalDelete(delete_images,item)">
+                <em class="fe fe-trash"></em>
+              </button>
+                </div>
+                <video  style="width: 100%;height:100%;" controlsList="nodownload nofullscreen noremoteplayback">   
+                  <source [src]="api_url +item.file" accept="video/*">  
+                  <track src="" kind="subtitles" srclang="en" label="English"> 
+                </video>
+              </div>
+              <div class="text-gray-6">
+                <div>{{item.filename}}</div>
+              </div>
+            </div>
+          </ng-template>
+        <ng-template [ngIf]="searchShow">
+          <div class="kit__gallery__item" *ngFor="let item of serachImage"  > 
+              <div class="kit__gallery__itemContent" >
+                <div class="kit__gallery__itemControl">
+                  <div class="btn-group kit__gallery__itemControlContainer">
+                    <button type="button" class="btn" (click)="previewimage({type:item.category === 'video'?'video':'image',url:api_url+item.file},imagepopup)" tooltip="Preview">
+                      <em class="fe fe-eye"></em>
+                    </button> 
+                  </div>
+               <button type="button" class="btn" style="    top: 90%;
+               left: 68%;
+               position: relative;
+               background: #c9656a;
+               color: white;
+               transform: translate(-50%, -50%);" (click)="openModalDelete(delete_images,item)">
+                <em class="fe fe-trash"></em>
+              </button>
+                </div>
+                <ng-container [ngSwitch]="item.category">
+                  <video *ngSwitchCase="'video'"  style="width: 100%;height:100%;" controlsList="nodownload nofullscreen noremoteplayback">   
+                    <source [src]="api_url +item.file" accept="video/*">   
+                    <track src="" kind="subtitles" srclang="en" label="English">
+                  </video>
+                  <img *ngSwitchDefault [src]="api_url +item.file" alt="Cinque Terre" class="img-fluid" style="width: 100%;height:auto;"> 
+                </ng-container>
+              </div>
+              <div class="text-gray-6">
+                <div>{{item.filename}}</div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template [ngIf]="searchShowEmpty">
+           <img src="./assets/logon/Search.png"  alt="Cinque Terre">
+           </ng-template>
+        <ng-template #imagepopup>
+          <div class="openModal popupbg" role="document">
+            <div class="modal-header">
+              PREVIEW
+              <button type="button" class="close" data-dismiss="modal" (click)="closepopup()">&times;</button>
+            </div>
+            <div class="modal-dialog">
+            <div class="modal-content">
+              <ng-container [ngSwitch]="ViewType">
+                <img *ngSwitchCase="'image'" [src]="selectedimg" alt="" class="img-fluid" style="width:auto;height:auto;"> 
+                <video *ngSwitchCase="'video'" style="width:auto;height:auto;" controls controlsList="nodownload  noremoteplayback">   
+                  <source [src]="selectedimg" accept="video/*"> 
+                  <track src="" kind="subtitles" srclang="en" label="English">
+                </video>
+              </ng-container>
+             </div>
+            </div>
+            </div>
+        </ng-template> 
+        </div>
+        </div>
+      </div>
+    </div>
+    <div [ngClass]="{'col-lg-2 mr-2 card_style':filterenable }">
+  </div>
+  </div>
+</div>                     
+<ng-template #delete_images>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Delete Image</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Do you want to delete the Image?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default greenbtn" (click)="deleteimage();modalRef.hide()">Yes</button>
+    <button type="button" class="btn btn-secondary redbtn" (click)="modalRef.hide()" >No</button>
+  </div>
+</ng-template>
+  <div class="alert_box" *ngIf="alertShown">
+      <em class="fa fa-exclamation icon"></em>
+    <header>Alert</header>
+    <p style="font-size: 17px!important;">{{alertMessage}}</p>
+    <button class="greenbtn btn-primary"style="font-size:17px"(click)="alertClose()"> OK </button>
+  </div>
+  <div class="disableScreen" *ngIf=displayShown></div>
+                                  
+    
+    
+                      
+    
+          
+    
+imagegallery.css
+
+div.gallery {
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    border: 1px solid #ddd; /* Gray border */
+    border-radius: 4px;  /* Rounded border */
+    position: relative;
+    display: inline-flex;
+  }.air__utils__content{padding: 1rem;}
+  .modal .modal-content{    border-radius: 15px;  }
+  .kit__utils__control{    margin-bottom: 1rem !important;width: 100%;
+ }
+ html, body{    background-color: #f0f1f4 !important;
+ }
+ h3{    font-size: 14px;    width: 100%;
+  padding: 9px 10px;
+  color: #6f6e6e;
+ margin-bottom: 20px;    background-color: #d9dce2 !important;}
+  html, body{    background-color: #f0f1f4 !important;  }
+  .modal-dialog {
+    max-width:fit-content; /* New width for default modal */
+  }
+  .modal-header{    background:#2e8c9f;
+    color: white;border-radius: 15px 15px 0px 0px;
+    padding: 10px;}
+    .modal-header .close{background: transparent !important;
+      color: white;
+      opacity: 1;}
+    .modal-content{    border-radius: 15px !important;    }
+  .greenbtn{    background-color: #6EACAF !important;border-radius: 100px;    padding: 5px 20px;
+    border-color: #6EACAF;}
+    .redbtn{    color: #fff !important;
+      background-color: #c9656a;    padding: 5px 20px;
+      border-color: #c9656a;border-radius: 100px;}
+  .kit__utils__heading, .air__utils__heading{border-bottom: none !important;}
+  .kit__utils__heading:after, .air__utils__heading:after{display: none !important;}
+    div.gallery:hover {
+      box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+    }
+   
+    div.gallery img {
+      max-height: 100%;  
+      max-width: 100%; 
+      position: absolute;
+      top: 0;  
+      bottom: 0;  
+      left: 0;  
+      right: 0;  
+      margin: auto;
+    }
+    .air__sidebar__toggleButton:hover{background-color: #6eacaf !important;color: white;}
+.air__sidebar__toggleButton:hover i{color: white !important;}
+.air__sidebar__toggleButton{
+  left: -3.65rem;
+  padding-right: 1.33rem;
+  text-align: right;right: inherit;
+}
+:host ::ng-deep #main-wrapper{
+  background-color: #f1f1f1 !important;
+}
+.card_style{
+  padding-left:30px;padding-top: 20px;flex: 0 0 23.666667%;max-width: 23.666667%;
+}
+.air__sidebarl .air__sidebar__close {
+  width: 16rem;
+    position: fixed;
+    z-index: 9999999999;
+    top: 5.6rem;
+    bottom: 0;
+    background: #ececec;
+    transform: translateX(0px);
+    transition: all 0.2s ease-in-out;
+}
+.air__sidebar__toggleButtonl_close:hover,.air__sidebar__toggleButtonl_close:hover i{background-color: #e4e6e6 !important;color: #6eacaf !important;}
+.air__sidebar__toggleButtonl_close{
+  background-color: #e4e6e6 !important;
+}
+.air__sidebarl:after {
+  content: "";
+  font-size: 12px;
+  background-size: 30px;
+  width: 30px;
+  height: 30px;
+  display: block;
+  margin: 10px auto 0px auto;
+}
+.customScroll{
+  max-height: 175px;
+  overflow-y: hidden;
+}
+.customScroll:hover{
+  overflow-y: scroll;
+}
+.img-wrap {
+  position: absolute;
+  display: inline-block;
+  /* border: 1px red solid; */
+  font-size: 0;
+}
+.img-wrap .close {
+  position: absolute;
+    bottom: -7px;
+    left: -15px;
+    z-index: 100;
+    background-color: #f1f1f1;
+    padding: 5px 2px 2px;
+    color: #000;
+    font-weight: normal;
+    cursor: pointer;
+    opacity: .2;
+    text-align: center;
+    font-size: 19px;
+    line-height: 10px;
+    border-radius: 50%;
+}
+.img-wrap:hover .close {
+  opacity: 1;
+}
+.niceScroll{
+  max-height: 299px;
+    overflow: hidden;
+}
+.niceScroll:hover{
+  overflow-y: scroll;
+}
+.air__sidebar{
+  top:5rem
+}
+.FileLabel{
+  width:220px;
+  font-family: 'Poppins-Regular';
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px dashed #BBB;
+  text-align: center;
+  background-color: #DDD;
+  cursor: pointer;
+}
+.disableScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  background: #000;
+  z-index: 1040;
+  height: 100%;
+  width: 100%;
+   }
+
+.alert_box{
+    padding: 20px;
+    display: flex;
+    background: #fff;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width:340px;
+    width: 100%;
+    border-radius: 5px;
+    z-index: 1050;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+    position: fixed;
+    left:35%
+  }
+.alert_box .icon{
+    height: 100px !important;
+    width: 100px !important;
+    color: #f23b26 !important;
+    border: 3px solid #f23b26 !important;
+    border-radius: 50% !important;
+    line-height: 97px !important;
+    font-size: 50px !important;
+  }
+.alert_box header{
+    font-size: 30px;
+    font-weight: 500;
+    }
+ 
+ 
+ 
+ 
+ 
+ 
+ imagegallery.ts
+ 
+ import { Component, OnInit,TemplateRef,ViewChild,ElementRef } from '@angular/core';
+import { UserService } from '../../../shared/services/user.service'
+import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { ToastrService } from 'ngx-toastr';
+
+@Component({
+  selector: 'app-imagegallery',
+  templateUrl: './imagegallery.component.html',
+  styleUrls: ['./imagegallery.component.scss']
+})
+
+export class ImagegalleryComponent implements OnInit {
+@ViewChild('delete_images') tempPageRef: TemplateRef<any>;
+@ViewChild('FileUpload')  fileUploadRef:ElementRef<any>;
+
+constructor(private userService: UserService, private router: Router,
+private modalService: BsModalService,private toast: ToastrService) { }
+
+ngOnInit() {
+    this.getsignatureImage();
+    this.getlogoImage();
+    this.getOtherImage();
+    this.getVideoFiles();
+}
+
+//filter and category change functionality code.....................
+
+filterenable: boolean;
+filter_value: any = [];
+api_url: any = environment.swagss;
+clear_filter:any = './assets/images/filter.png'
+allCheckBox=true;
+signatureCheckBox=false;
+logoCheckBox=false;
+otherCheckBox=false; 
+videoCheckBox=false;
+
+leftsidepanel(){
+    this.filterenable=!this.filterenable;
+    this.searchShow=false; 
+    this.searchShowEmpty=false;
+    this.searchValue="";      
+}
+
+clearfilter(){
+    this.allCheckBox=false;
+      this.signatureCheckBox=false;
+      this.logoCheckBox=false;
+      this.otherCheckBox=false; 
+      this.videoCheckBox=false; 
+      this.filter_value = []
+}
+
+activecheckbox(e){
+    this.clearfilter()
+    if(e=='all'){
+      this.allCheckBox=true; 
+      this.searchShow=false; 
+      this.searchShowEmpty=false;
+      this.searchValue="";      
+    }
+    else if(e=='signature'){
+      this.filter_value.push(e)
+      this.signatureCheckBox=true;
+      this.searchShow=false; 
+      this.searchShowEmpty=false
+      this.searchValue="";      
+    }
+    else if(e=='logo'){
+      this.filter_value.push(e)
+      this.logoCheckBox=true;
+      this.searchShow=false; 
+      this.searchShowEmpty=false
+      this.searchValue="";      
+    }
+    else if(e=='other'){
+      this.filter_value.push(e)
+      this.otherCheckBox=true; 
+      this.searchShow=false; 
+      this.searchShowEmpty=false
+      this.searchValue="";       
+    }
+    else if(e=='video'){
+      this.filter_value.push(e)
+      this.videoCheckBox=true; 
+      this.searchShow=false; 
+      this.searchShowEmpty=false
+      this.searchValue="";       
+    }
+}
+ 
+//preview upload files and modals functionality code...........
+
+ViewType:string;
+modalRef: BsModalRef;
+selectedimg:any;
+previewimage(img,imagepopup){ 
+    if(img.type === "video")
+      this.ViewType="video"  
+    else this.ViewType="image"
+  this.modalRef = this.modalService.show(imagepopup, { class: 'modal-md', backdrop: 'static'});
+  this.selectedimg=img.url;
+}
+
+closepopup(){
+  this.modalRef.hide();
+}
+
+//get signature logo and other images and video files functionality code......
+
+signatureImage: any;
+getsignatureImage() {
+    this.userService.signatureimages().subscribe(data => {
+    this.signatureImage = data;
+    if (data==""){
+        this.alertClose("Signature Images are Empty ");
+      }
+    })
+}
+
+logoImage: any;
+getlogoImage() {
+      this.userService.logoimage().subscribe(data => {
+      this.logoImage = data;
+      if (data==""){
+        this.alertClose("Logo Images are Empty ");
+      }
+    })
+}
+  
+otherImage: any;
+getOtherImage() {
+    this.userService.otherimages().subscribe(data => {
+    this.otherImage = data;
+    if (data==""){
+      this.alertClose("Other Images are Empty ");
+    }
+  })
+}
+
+videoFiles: any;
+getVideoFiles() {
+    this.userService.videoFiles().subscribe(data => {
+    this.videoFiles = data;
+    if (data==""){
+      this.alertClose("Video Files are Empty ");
+    }
+  })
+}
+
+//upload image and video in db and functionality code....................
+
+alertShown:boolean=false;
+displayShown:boolean=false;
+alertMessage=""
+alertClose(text:string){
+ this.alertMessage=text
+ this.alertShown=!this.alertShown
+ this.displayShown=!this.displayShown
+ this.fileUploadRef.nativeElement.value="";
+}
+
+selectedfile: File = null;
+selectedoption = 'logo';
+careimagearr1:any=[];
+urls = [];
+onselect(event) {
+  var  imageFormat= ['image/jpg','image/jpeg','image/gif','image/webp','image/tiff','image/psd',
+  'image/raw', 'image/bmp','image/heif','image/indd','image/svg','image/png']
+  var videoFormat=['video/mp4','video/webm','video/ogg','video/ogv']
+  var OtherFormat:boolean=true;
+  var videoLoop:boolean=true;
+  if(event.target){
+    var uploadFiles = event.target.files
+    for(var element of uploadFiles){
+      var reader = new FileReader();
+      reader.readAsDataURL(element);
+      var Type=element.type
+      reader.onload=(events:any)=>{
+          for(var m=0;m<imageFormat.length;m++){
+            if(Type === imageFormat[m]) {
+                OtherFormat=false;
+                videoLoop=false;
+              if(this.selectedoption != "video"){
+                this.careimagearr1.push({
+                  filename:element.name,
+                  filetype:element.type,
+                  value:events.currentTarget.result.split(',')[1]
+                 })  
+                 this.urls.push({
+                   Type:'image',
+                   link:events.currentTarget.result
+                 }); 
+                 this.changes(event);
+               }else this.alertClose("This category Only Support For Video Files");
+            }
+          }
+
+          if(videoLoop){
+            for(var v=0;v<videoFormat.length;v++){
+              if(Type === videoFormat[v]){
+                  OtherFormat=false;
+                if(this.selectedoption === "video"){
+                  this.careimagearr1.push({
+                    filename:element.name,
+                    filetype:element.type,
+                    value:events.currentTarget.result.split(',')[1]
+                   })  
+                   this.urls.push({
+                    Type:'video',
+                    link:events.currentTarget.result
+                  });
+                  this.changes(event); 
+                }else this.alertClose("This category Only Support For Image Files");
+             }
+           }
+          }
+         
+        if(OtherFormat) 
+        this.alertClose("This File Format Cannot Support To upload");
+
+      };
+    }
+  }
+}
+
+removeUpload(url,i){
+  this.urls.splice(i, 1);
+  this.careimagearr1.splice(i,1)
+  if(this.careimagearr1.length>0)
+     this.LockDD=true;
+  else
+    this.LockDD=false;
+}
+
+LockDD:boolean=false
+changes(event){
+   if(this.careimagearr1.length>0)
+    this.LockDD=true;
+   else{
+    this.selectedoption = event.target.value
+    this.LockDD=false;
+   }
+}
+
+upload(){ 
+    var files = {
+      'category':this.selectedoption,
+      'Token':'',
+      'file1':'',
+      'file2':'',
+      'file3':'',
+      'file':[]
+    };
+
+    var pattern = new RegExp(/[~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/); //unacceptable chars
+    for(var k=0;k<this.careimagearr1.length;k++){
+      if (pattern.test(this.careimagearr1[k].filename)) {
+         return this.alertClose("Please only use standard alphanumerics filename-"+this.careimagearr1[k].filename);
+        }
+    }
+
+  if(this.careimagearr1.length>0){
+    this.careimagearr1.forEach((element,index) => {
+      let data = []
+      data.push(element)
+      if(index==0)
+        files['file'] = data
+      else{
+        files[`file${index}`] = data
+      }
+    });
+
+    if(this.selectedoption === 'video'){
+      this.userService.videoUpload(files).subscribe(data => {
+        if(data ==="OK"){
+        this.toast.success('Successfully Uploaded', '', { progressBar: true });
+        this.makeEmpty();
+        this.reloadPage();
+        }
+        else{
+          this.toast.error('File Not Support To Upload', '', { progressBar: true });
+          this.makeEmpty();
+         }
+        
+        });
+    }
+    else{
+    this.userService.imageupload(files).subscribe(videodata => {
+      if(videodata ==="OK"){
+      this.toast.success('Successfully Uploaded', '', { progressBar: true });
+      this.makeEmpty();
+      this.reloadPage();
+      }
+      else if(videodata ==="Filename Already exists"){
+        this.toast.error('Filename Already exists', '', { progressBar: true });
+        this.makeEmpty();
+      }
+      else{
+        this.toast.error('File Not Support To Upload', '', { progressBar: true });
+        this.makeEmpty();
+       }
+      
+      });
+    }
+  }
+}
+
+reloadPage(){
+ 
+ this.userService.signatureimages().subscribe(signdata => {
+   this.signatureImage = signdata;
+    if (signdata==""){
+        this.alertClose("Signature Images are Empty ");
+      }
+      if(this.searchValue){
+        var searchvalue ={
+          "searchinput":this.searchValue
+        }
+        this.userService.getSearchImage(searchvalue).subscribe(search_data => {
+          this.serachImage = search_data;
+          this.showSearchData(search_data);
+        })
+      }
+   this.userService.logoimage().subscribe(logodata => {
+   this.logoImage = logodata;
+   if (logodata==""){
+       this.alertClose("Logo Images are Empty ");
+     }
+    })
+
+   this.userService.otherimages().subscribe(otherdata => {
+   this.otherImage = otherdata;
+   if (otherdata==""){
+     this.alertClose("Other Images are Empty ");
+    }
+   })
+
+   this.userService.videoFiles().subscribe(videodata => {
+    this.videoFiles = videodata;
+    if (videodata==""){
+        this.alertClose("Video Files are Empty ");
+       }
+     })
+ })
+      
+}
+
+showsidebar:boolean = false
+openrightsidebar(){
+  this.selectedoption='logo'
+  this.showsidebar=!this.showsidebar;
+}
+
+makeEmpty(){
+  this.selectedoption='logo'
+  this.careimagearr1 =[]
+  this.urls = []
+  this.LockDD=false
+  this.openrightsidebar()
+}  
+
+//delete image and video functionality code..........................
+
+del_id:any;
+openModalDelete(template: TemplateRef<any>,data) {
+    this.modalRef = this.modalService.show(template);
+    this.del_id=data;
+    
+}
+
+deleteimage() {
+  this.userService.deleteimage(this.del_id.id).subscribe(data => { 
+    if(data == 'deleted successfully'){
+      this.toast.success("Deleted Successfully", " ", {progressBar: true });  
+    }
+   this.deleteReloadPage();
+       })
+}
+deleteReloadPage(){
+  this.deleteLogoImages();
+}
+
+deleteLogoImages() {
+    this.userService.logoimage().subscribe(data => {
+    this.logoImage = data;
+      for(var i=0;i<this.logoImage.length;i++){
+      var newkey="S_No"
+      var newvalue=i+1
+      var name ="File Name"
+      var v = this.logoImage[i].file.split("/")
+      var value = v[v.length-1]
+      this.logoImage[i][newkey]=newvalue;
+      this.logoImage[i][name] = value;
+      }
+      if(this.searchValue){
+          var searchvalue ={
+          "searchinput":this.searchValue
+        }
+      
+        this.userService.getSearchImage(searchvalue).subscribe(searcdata => {
+         
+          this.serachImage = searcdata;
+          this.showSearchData(searcdata);
+        })
+      }
+    })
+  this.deleteSignatureImages() ;
+}
+
+deleteSignatureImages() {
+    this.userService.signatureimages().subscribe(data => {
+    this.signatureImage = data;
+      for(var i=0;i<this.signatureImage.length;i++){
+        var newkey="S_No"
+        var newvalue=i+1
+        var name ="File Name"
+        var v = this.signatureImage[i].file.split("/")
+        var value = v[v.length-1]
+        this.signatureImage[i][newkey]=newvalue;
+        this.signatureImage[i][name] = value;
+        }
+    })
+  this.deleteOtherImages();
+}
+
+deleteOtherImages() {
+    this.userService.otherimages().subscribe(data => {
+    this.otherImage = data;
+      for(var i=0;i<this.otherImage.length;i++){
+        var newkey="S_No"
+        var newvalue=i+1
+        var name ="File Name"
+        var v = this.otherImage[i].file.split("/")
+        var value = v[v.length-1]
+        this.otherImage[i][newkey]=newvalue;
+        this.otherImage[i][name] = value;
+        }
+    })
+  this.deletevideo();
+}
+
+deletevideo() {
+  this.userService.videoFiles().subscribe(data => {
+  this.videoFiles = data;
+    for(var i=0;i<this.videoFiles.length;i++){
+      var newkey="S_No"
+      var newvalue=i+1
+      var name ="File Name"
+      var v = this.videoFiles[i].file.split("/")
+      var value = v[v.length-1]
+      this.videoFiles[i][newkey]=newvalue;
+      this.videoFiles[i][name] = value;
+      }
+  })
+}
+// search box code functionality code...........
+
+searchShow:boolean=false;
+searchShowEmpty:boolean=false
+serachImage:any;
+searchValue:any;
+getSearchBoxValue(value){
+  if(!value){
+    this.allCheckBox=true; 
+    this.searchShow=false;
+    this.searchShowEmpty=false
+    this.signatureCheckBox=false;
+    this.logoCheckBox=false;
+    this.otherCheckBox=false; 
+    this.videoCheckBox=false;
+  }
+  else{
+    var searchvalue ={
+      "searchinput":value
+    }
+   
+    this.userService.getSearchImage(searchvalue).subscribe(data => {
+      this.serachImage = data;
+      this.showSearchData(data);
+    })
+  }
+}
+
+getSearchBoxValueByPaste(event: ClipboardEvent) {
+  var pastedText = event.clipboardData.getData('text');
+  this.getSearchBoxValue(pastedText);
+}
+
+showSearchData(value){
+  if(value == ""){
+    this.searchShowEmpty=true
+    this.searchShow=false;
+    this.allCheckBox=false;
+    this.signatureCheckBox=false;
+    this.logoCheckBox=false;
+    this.otherCheckBox=false;
+    this.videoCheckBox=false;
+  }
+  else{
+    this.searchShow=true;
+    this.searchShowEmpty=false;
+    this.allCheckBox=false;
+    this.signatureCheckBox=false;
+    this.logoCheckBox=false;
+    this.otherCheckBox=false; 
+    this.videoCheckBox=false;
+  }
+}
+
+}
+ 
