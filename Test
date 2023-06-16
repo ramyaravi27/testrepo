@@ -6572,6 +6572,32 @@ showSearchData(value){
     this.videoCheckBox=false;
   }
 }
-
 }
  
+
+sonar-project.properties
+
+sonar.host.url=http://localhost:9000
+	sonar.login=admin
+	sonar.password=admin
+	sonar.projectKey=dccpUI
+	sonar.projectName=dccpUI
+	sonar.projectVersion=1.0
+	sonar.sourceEncoding=UTF-8
+	sonar.sources=src/app
+	sonar.exclusions=**/node_modules/**
+	#sonar.tests=src
+	#sonar.test.inclusions=**/*.spec.ts
+	#sonar.typescript.lcov.reportPaths=coverage/lcov.info
+
+
+sonarqube_ui.bat
+
+set path=%path%;.;C:\Program Files\Java\jdk1.8.0_102\bin;D:\sonar-scanner-4.0.0.1744-windows\bin;D:\apache-maven-3.6.1-bin\apache-maven-3.6.1\bin;
+sonar-scanner.bat -Dsonar.projectKey=dccpUI -Dsonar.sources=./src/app -Dsonar.host.url=http://localhost:9000
+
+
+sq.bat
+
+sonar-scanner.bat -Dsonar.projectKey=dccp-ui_angular -Dsonar.sources=src/app -Dsonar.host.url=http://localhost:9000
+
