@@ -6752,3 +6752,531 @@ this.userService.manageuserstatus(test).subscribe(data => {
 })
 }
 
+
+
+business-unit-document.component.html
+
+
+
+<div class="card card-body">
+  <tabset>
+   <tab heading = "Business Unit Document " id="tab1"><div class="row">
+     <div class="col-lg-12">
+       <div class="card">
+         <div class="card-body">
+           <div class="d-md-flex align-items-center">
+             <div>
+               <h4 class="card-title">Business Unit Document</h4>
+               <h5 class="card-subtitle"> </h5>
+             </div>
+
+           </div>
+                       <div class="form-group row">
+            </div>
+           <div class="form-group row">
+            <label class="col-lg-2 col-xs-2 text-left control-label col-form-label">Business Unit </label>
+            <div class="col-lg-3 col-xs-2 text-left " >
+              <select required name="unitname" (change)="businessunit($event)" [(ngModel)]="unitname"
+               class="custom-select form-control"> 
+               
+                <option *ngFor="let item of businessUnit" [value]="item.BuId" >
+                  {{item.BussinessUnitCode}} - {{item.BussinessUnitName}}</option>
+              </select>
+            </div>
+             <label class="col-lg-2 col-xs-2 text-right control-label col-form-label">Mode</label>
+            <div class="col-lg-3 col-xs-2 text-right " >
+              <select  name="modee" (change)="doccodechange($event)" [(ngModel)]="modee" class="custom-select form-control">
+              <option value='all'> All</option>
+              <option value='staging'>Staging</option>
+              <option value='production'>Production</option>
+              </select>
+          
+            </div>
+
+            </div> 
+
+           <dx-data-grid id="gridContainer" [dataSource]="clientList" [columnAutoWidth]="true" [showBorders]="false">
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-search-panel [visible]="true" width="250"></dxo-search-panel>
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+            </dxo-pager>
+            <dxi-column dataField="name" [allowHeaderFiltering]="false"  cellTemplate="cellTemplateImage" caption="System Name">
+            </dxi-column>
+            <dxi-column dataField="doccode" caption="Doc Code" dataType="string">
+            </dxi-column>
+            <dxi-column dataField="EffectiveDate"[allowHeaderFiltering]="false" caption="Effective Date" dataType="date" format="MM-dd-yyyy">
+            </dxi-column>
+            <dxi-column dataField="ExpiryDate" [allowHeaderFiltering]="false" caption="Expiry Date" dataType="date" format="MM-dd-yyyy">
+            </dxi-column>
+            <dxi-column dataField="active_status"  caption="Status" cellTemplate="cellTemplateStatus">
+            </dxi-column>
+            <dxi-column dataField="CreatedBy" [allowHeaderFiltering]="false" caption="Created By" dataType="string" [allowSearch]="false" >
+            </dxi-column>
+            <dxi-column type="buttons"
+            headerCellTemplate="Actions" >
+                <dxi-button template="formproductId">
+                    <div *dxTemplate="let frmid of 'formproductId'" >
+                        <a (click)="btnEditClick(frmid)" style="padding-right: 5px;">
+                          <span class="mdi mdi-file-lock" style="font-size: 29px;color: rgb(6, 109, 226); cursor:pointer;" tooltip="Editor"  placement="top" container="body" ></span>
+                        </a>
+                        <a (click)="btnPDFClick(frmid)" style="padding-right: 5px;">
+                          <span class="mdi mdi-file-pdf" [ngStyle]="frmid.data.formtypeid===1 ||frmid.data.formtypeid===2  ? {'color': 'rgb(6, 109, 226)', 'cursor':'pointer'} : {'color': 'rgb(135,206,250)', 'cursor':'default'}" style="font-size: 29px;color: rgb(6, 109, 226); cursor:pointer;" tooltip="PDF"   placement="top" container="body"></span>
+                        </a>
+                        <a (click)="btnHTMLClick(frmid)" style="padding-right: 5px;">
+                          <span class="mdi mdi-file-check" [ngStyle]="frmid.data.formtypeid===2 ? {'color': 'rgb(6, 109, 226)', 'cursor':'pointer'} : {'color': 'rgb(135,206,250)', 'cursor':'default'}"  style="font-size: 29px;"   tooltip="HTML"  placement="top" container="body" ></span>
+                        </a>
+
+                        <a (click)="btnJSONClick(frmid)" style="padding-right: 5px;">
+                          <span class="mdi mdi-clipboard-text" [ngStyle]="frmid.data.formtypeid===1 ||frmid.data.formtypeid===3 ? {'color': 'rgb(6, 109, 226)', 'cursor':'pointer'} : {'color': 'rgb(135,206,250)', 'cursor':'default'}" style="font-size: 29px;" tooltip="JSON"   placement="top" container="body"></span>
+                        </a>
+                    </div>
+                </dxi-button>
+            </dxi-column>
+
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[8, 12, 20]"></dxo-pager>
+            <div *dxTemplate="let data of 'cellTemplateImage'">
+              <img [src]="apiurl + data.value" alt="" style="height: 80px;">
+            </div>
+            <div *dxTemplate="let data of 'cellTemplatetypeid'">
+
+              <span *ngIf="data.value == 1">Structured<br> Document</span>
+              <span *ngIf="data.value == 2">Unstructured<br> Document</span>
+              <span *ngIf="data.value == 3">Survey</span>
+
+            </div>
+            <div *dxTemplate="let data of 'cellTemplateStatus'">
+            
+              <span *ngIf="data.value == 'active'"><span class="mdi mdi-check mdi-36px" style="color: rgb(6, 109, 226);padding: 0px;"></span></span>
+              <span *ngIf="data.value == 'Inactive'"></span>
+              
+  
+            </div>
+            
+            <div *dxTemplate="let data of 'cellTemplateImage'">
+                <img *ngIf="data.data.formtypeid === 1" class='logo' src='./assets/images/strucdocicnn.png' alt="" tooltip="Structured Document"  placement="top" container="body">
+                <img *ngIf="data.data.formtypeid === 2" class='logo' src='./assets/images/unstrucdocicn.png' alt="" tooltip="Unstructured Document"  placement="top" container="body" >
+                <img *ngIf="data.data.formtypeid === 3" class='logo' src='./assets/images/surveyicn.png' alt="" tooltip="Survey"  placement="top" container="body" >
+                <img *ngIf="data.data.production_status === 'production'"  class='color' src='./assets/images/green.png' alt="" tooltip="Production"   placement="top" container="body" >
+                 <img *ngIf="data.data.production_status === 'staging'"  class='color' src='./assets/images/orange.png' alt="" tooltip="Staging to Production"  placement="top" container="body" >
+
+              <div style="display: inline-block;">
+                  <h6>{{data.data.name}}</h6>
+                  <h6>{{data.data.masterdocumentname}}</h6>
+                  <h6>{{data.data.Documenttitle}}</h6>
+                </div>
+
+              </div>
+          </dx-data-grid>
+         </div>
+       </div>
+     </div>
+   </div></tab>
+
+   <tab heading = "Common Document " id="tab2" ><div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-md-flex align-items-center">
+            <div>
+              <h4 class="card-title"> Common Document</h4>
+              <h5 class="card-subtitle"> </h5>
+            </div>
+
+          </div>
+                  <div class="form-group row">
+                </div>
+          <dx-data-grid id="gridContainer" [columnAutoWidth]="true"  [dataSource]="dclientList" [showBorders]="false">
+           <dxo-filter-row [visible]="false"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+           <dxo-search-panel [visible]="true" width="250"></dxo-search-panel>
+           <dxo-paging [pageSize]="10"></dxo-paging>
+           <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+           </dxo-pager>
+
+            <dxi-column dataField="name" [allowHeaderFiltering]="false" cellTemplate="cellTemplateImage" caption="System Name"  >
+         </dxi-column>
+         <dxi-column dataField="doccode" caption="Doc Code" dataType="string" width="150"  >
+         </dxi-column>
+          <dxi-column dataField="approveddate" [allowHeaderFiltering]="false" caption="Approved Date "  dataType="date"  format="MM-dd-yyyy HH:MM" width="180">
+         </dxi-column>
+         <dxi-column dataField="CreatedBy" [allowHeaderFiltering]="false"  caption="CreatedBy" width="180" >
+         </dxi-column>
+          <dxi-column type="buttons"
+         headerCellTemplate="Actions" width="150">
+         
+             <dxi-button template="formproductId">
+                 <div *dxTemplate="let frmid of 'formproductId'" >
+                     <a (click)="btnEditClick(frmid)" style="padding-right: 5px;">
+                       <span class="mdi mdi-file-lock" style="font-size: 29px;color: rgb(6, 109, 226); cursor:pointer;" tooltip="Editor"  placement="top" container="body" ></span>
+                     </a>
+                     <a (click)="btnPDFClick(frmid)" style="padding-right: 5px;">
+                       <span class="mdi mdi-file-pdf" [ngStyle]="frmid.data.formtypeid===1 ||frmid.data.formtypeid===2  ? {'color': 'rgb(6, 109, 226)', 'cursor':'pointer'} : {'color': 'rgb(135,206,250)', 'cursor':'default'}" style="font-size: 29px;color: rgb(6, 109, 226); cursor:pointer;" tooltip="PDF"   placement="top" container="body" ></span>
+                     </a>
+
+                     <a (click)="btnHTMLClick(frmid)" style="padding-right: 5px;">
+                       <span class="mdi mdi-file-check" [ngStyle]="frmid.data.formtypeid===2 ? {'color': 'rgb(6, 109, 226)', 'cursor':'pointer'} : {'color': 'rgb(135,206,250)', 'cursor':'default'}"  style="font-size: 29px;"   tooltip="HTML"  placement="top" container="body" ></span>
+                     </a>
+                     <a (click)="btnJSONClick(frmid)" style="padding-right: 5px;">
+                       <span class="mdi mdi-clipboard-text" [ngStyle]="frmid.data.formtypeid===1 ||frmid.data.formtypeid===3 ? {'color': 'rgb(6, 109, 226)', 'cursor':'pointer'} : {'color': 'rgb(135,206,250)', 'cursor':'default'}" style="font-size: 29px;" tooltip="JSON"   placement="top" container="body"></span>
+                     </a>
+                 </div>
+                 
+             </dxi-button>
+         </dxi-column>
+           <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[8, 12, 20]"></dxo-pager>
+           <div *dxTemplate="let data of 'cellTemplateImage'">
+             <img [src]="apiurl + data.value" alt="" style="height: 50px;">
+           </div>
+            <div *dxTemplate="let data of 'cellTemplateImage'">
+           <img *ngIf="data.data.formtypeid === 1" class='logo' alt="" src='./assets/images/strucdocicnn.png' tooltip="Structured Document"   placement="top" container="body">
+           <img *ngIf="data.data.formtypeid === 2" class='logo' alt="" src='./assets/images/unstrucdocicn.png' tooltip="Unstructured Document"   placement="top" container="body">
+           <img *ngIf="data.data.formtypeid === 3" class='logo' alt="" src='./assets/images/surveyicn.png' tooltip="Survey"   placement="top" container="body">
+
+            <div style="display: inline-block;">
+           <h6>{{data.data.name}}</h6>
+            <h6>{{data.data.masterdocumentname}}</h6>
+<h6>{{data.data.Documenttitle}}</h6>
+           </div>
+         </div>
+         </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div></tab>
+
+   <tab heading = "Search Document" id="tab3"><div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-md-flex align-items-center">
+            <div>
+              <h4 class="card-title">Search Document</h4>
+              <h5 class="card-subtitle"> </h5>
+            </div>
+
+          </div>
+          <dx-data-grid id="gridContainer" [columnAutoWidth]="true" [dataSource]="vclientList" [showBorders]="false">
+            <dxo-filter-row [visible]="false"></dxo-filter-row>
+            <dxo-header-filter [visible]="false"></dxo-header-filter>
+            <dxo-search-panel [visible]="true" width="250"></dxo-search-panel>
+            <dxo-paging [pageSize]="10"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true">
+            </dxo-pager>
+            <dxi-column dataField="sno" dataType="string">
+            </dxi-column>
+            <dxi-column dataField="SystemName" dataType="date"  format="MM-dd-yyyy HH:MM">
+            </dxi-column>
+            <dxi-column dataField="DocCode" dataType="string">
+            </dxi-column>
+            <dxi-column dataField="ApprovalStartDate" dataType="date"  format="MM-dd-yyyy HH:MM">
+            </dxi-column>
+            <dxi-column dataField="ApprovalEndDate" dataType="date"  format="MM-dd-yyyy HH:MM" >
+            </dxi-column>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[8, 12, 20]"></dxo-pager>
+            <div *dxTemplate="let data of 'cellTemplateImage'">
+              <img [src]="apiurl + data.value" alt="" style="height: 50px;">
+            </div>
+
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div></tab>
+
+
+
+ </tabset>
+</div>
+
+
+
+business-unit-document.component.ts
+
+import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
+import ArrayStore from 'devextreme/data/array_store'
+import { UserService } from '../../../../shared/services/user.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-business-unit-document',
+  templateUrl: './business-unit-document.component.html',
+  styleUrls: ['./business-unit-document.component.scss']
+})
+export class BusinessUnitDocumentComponent implements OnInit {
+  constructor(private userService: UserService, private router: Router) { }
+  
+ngOnInit() {
+  this.getClientList();
+  
+  // this.getMyApprovalPendingData();
+}
+
+clientList: any;
+dclientList: any;
+flagvalue:any;
+vclientList:any;
+status:any;
+dataSource: ArrayStore;
+getClientList() {
+    // this.userService.getCommonDoctoButable2Data().subscribe(data => {
+    //   this.clientList1 = data;
+    //   console.log('document2', this.clientList1);
+      this.getBusinessUnitData()
+      this.getBusinessUnitDocumentData()
+  }
+
+ businessunit(e) {
+      this.unitname=e.target.value
+      console.log("hgjfgggggg", e.target.value)
+       this.dataSource = new ArrayStore()
+      console.log("buname",  this.unitname)
+      this.getBusinessUnitDocumentData()
+  }
+
+getBusinessUnitDocumentData() {
+  console.log("mode",this.modee)
+  console.log("ststua",this.unitname)
+   this.dataSource = new ArrayStore()
+   var value ={
+    "unitname":this.unitname,
+    "mode":this.modee
+  }
+  console.log("unitvalue value",value)
+  this.userService.getBusinessUnitDocumentData(value).subscribe(data => {
+    this.clientList = data;
+    console.log('Businessunit document', this.clientList );
+     this.getcommonDocumentData();
+  })
+}
+
+// getcommonDocumentData() {
+//   this.userService.getcommonDocumentData().subscribe(data => {
+//     this.dclientList = data;
+//     console.log('this.dclientList', this.dclientList);
+//   })
+// }
+mode:any;
+formtype: any;
+getcommonDocumentData() {
+  this.userService.getcommonDocumentData().subscribe(data => {
+    this.dclientList = data;
+    console.log("dataaaa", data[0].formtypeId)
+    
+this.getBusinessUnitData();
+    console.log(" Common Document", this.dclientList)
+
+  })
+}
+modee:any='all';
+Common:any=0 ;
+doccodechange(e)
+{
+  // console.log("mode", this.status)
+   console.log("eventBU", e)
+    this.Common = e.target.value
+  
+    console.log("mode", this.modee)
+    this.getBusinessUnitDocumentData()
+    //  if(this.modee == -1)
+    //  {
+    //    this.modee = 0
+    //    this.getBusinessUnitDocumentData()
+    //  }
+    //  else if(this.modee == 0)
+     
+    // {
+    //   this.Common="staging"
+    //   this.getBusinessUnitDocumentData()
+    // }
+    // else if(this.modee == 1)
+    // {
+    //   this.Common="production"
+    //   this.getBusinessUnitDocumentData()
+    // }
+    //this.getcommonDocumentData()
+}
+ businessUnit: any = [];
+  // docCode: any = [];
+  unitname: any= 0;
+  createdefault: any;
+  data:any;
+  getBusinessUnitData() {
+    console.log("bussinessUnit called")
+    this.userService.getBusinessUnitData().subscribe(data => {
+      const map = new Map();
+      console.log("fstvalue", data[0].BussinessUnitName)
+      var fstvalue="All"
+ this.businessUnit.push({BuId:"0",
+  BussinessUnitName: fstvalue,
+  BussinessUnitCode: "All"
+
+ });
+      for (const item of data) {
+        if (!map.has(item.BussinessUnitCode)) {
+          map.set(item.BussinessUnitCode, true);
+          this.businessUnit.push({
+            BuId: item.BuId,
+            BussinessUnitCode: item.BussinessUnitCode,
+            BussinessUnitName: item.BussinessUnitName,
+            
+          });
+        }
+
+      }
+      console.log("bussineUnit ", this.businessUnit)
+    })
+  }
+
+api_url: any = environment.swagss;
+downloadlink(pdfid) {
+  var tablename="formproduct"
+  this.userService.downloadPDF(pdfid,tablename).subscribe(
+    (res) => {
+      console.log("entering", res)
+      
+       if (this.name === "html") {
+        console.log("datahtml", res.html)
+        if (res.html === "Not Found") {
+          alert("HTML file not found for the selected document. Please try again later.");
+
+        }
+        else {
+          // var fileURL = URL.createObjectURL(res.pdf);
+
+          let blob: any = new Blob([res.blob()], { type: "application/pdf;" });
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);        }
+      }
+      else if (this.name === "json") {
+        if (res.Actjson === "Not Found") {
+          alert("JSON not found for the selected document. Please try again later.");
+ }
+        else {
+          var myjson = JSON.stringify(res.Actjson, null, 2);
+          console.log(myjson);
+          var xee = window.open();
+          xee.document.open();
+          xee.document.write('<html><body><pre>' + myjson + '</pre></body></html>');
+          xee.document.close();
+        }
+      }
+  }
+  );
+}
+
+//Button click events
+pdfid: any
+name: any
+btnPDFClick(event) {
+  console.log(event.data.formproductId)
+  console.log("event", event)
+  console.log("formtypeid", event.data.formtypeid)
+  console.log("formtypeid", this.formtype)
+
+  if (event.data.formtypeid === 1) {
+
+    console.log("idcheck", event.data.formproductId)
+    var tablename="formproduct"
+    this.userService.downloadPDFstructdoc(event.data.formproductId,tablename).subscribe(
+      response => {
+
+        let blob: any = new Blob([response], { type: "application/pdf;" });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+        error =>{
+          alert("PDF file not found for the selected document. Please try again later.")
+        })
+      }
+  
+
+  if (event.data.formtypeid === 2 || event.data.formtypeid === 3)
+
+  // this.downloadlink(pdfid)
+  // this.name = "pdf"
+  {
+    this.userService.DownloadPDFFile(event.data.formproductId,tablename).subscribe(
+      responsedf => {
+        let blob: any = new Blob([responsedf], { type: 'application/PDF;' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+      error =>{
+        alert("PDF file not found for the selected document. Please try again later.")
+      })
+     
+  }
+
+}
+
+btnHTMLClick(event) {
+  console.log(event.data.formproductId)
+
+  console.log("formtypeId",event.data.formtypeid)
+  if (event.data.formtypeid === 2) {
+    var pdfid = event.data.formproductId
+    this.downloadlink(pdfid)
+    this.name = "html"
+  }
+  else {
+    console.log("diabled")
+  }
+
+
+}
+typeid: any;
+btnJSONClick(event) {
+  console.log(event.data.formproductId)
+  console.log("events", event.data.formtypeid)
+  console.log("formtypeId", event)
+  this.typeid = event.data.formtypeid
+
+  if (event.data.formtypeid === 1 || event.data.formtypeid === 3) {
+    var pdfid = event.data.formproductId
+    this.downloadlink(pdfid)
+    this.name = "json"
+
+  }
+
+}
+btnEditClick(event) {
+  var obje = {
+    "routerpage":"businessunit_doc",
+    "tablename":"library",
+    "content":"notEditable",
+    "designid": event.data.formproductId,
+    "mode": "edit",
+    "formtypeid": event.data.formtypeid
+  }
+  console.log("obje",obje)
+  this.userService.changeNav(obje)
+  // this.router.navigate([`/designbuilder/inprogress/edit/${obje.designid}`]);
+
+  console.log("sending id", this.formtype)
+  if (event.data.formtypeid === 1) this.router.navigate([`/designbuilder`]);
+
+  else if (event.data.formtypeid === 2) this.router.navigate([`/htmldocbuilder`]);
+
+  else if (event.data.formtypeid === 3) this.router.navigate([`/surveybuilder`]);
+}
+
+ 
+
+  buid: any;
+  docid: any;
+  documenname: any;
+  businessunitID: any;
+  createDocName(e) {
+    // console.log("BU", this.businessUnitdata);
+    // console.log("DC", this.documentCode);
+    console.log("eventBU", e.target.value)
+    this.businessunitID = e.target.value
+
+  
+
+  }
+ 
+}
+
