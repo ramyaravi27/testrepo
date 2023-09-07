@@ -7273,10 +7273,986 @@ btnEditClick(event) {
     // console.log("DC", this.documentCode);
     console.log("eventBU", e.target.value)
     this.businessunitID = e.target.value
-
-  
-
   }
- 
 }
 
+
+share.html
+
+<div class="air__layout__content bg-light">
+  <div class="air__utils__content">
+    <div class="row">
+      <div class="col-lg-12" style="margin-top: -1rem;">
+        <button class="btn btn-success text-nowrap float-left" type="button"
+          style="z-index:99;background-color: #6EACAF !important;width: max-content;" (click)="type='document_compose'">
+          Create New
+        </button>
+        <dx-select-box [dataSource]="bulist" displayExpr="name" valueExpr="BuId"
+          (onValueChanged)="onValueChanged($event)" placeholder="Select BU"
+          style="width: 160px;position: absolute;left: 10%;"></dx-select-box>
+        <div class="air__topbar__searchContainer float-right" style="margin-bottom: 10px;">
+          <em class="air__topbar__searchIcon fe fe-search"></em>
+          <input id="button-alignment" class="air__topbar__searchInput" type="text"
+            placeholder="Start typing to search..." [(ngModel)]="searchText" (keyup)="getSearchBoxValue(searchText)" />
+        </div>
+
+        <div class="card" style="clear: both;">
+
+          <a href="javascript: void(0);"
+            style="bottom: calc(50% + 120px); background-color: #2d8d99;color:#FFF !important; "
+            class="air__sidebar__toggleButton air__sidebar__actionToggle" (click)="openrightsidebar()"
+            data-toggle="tooltip" data-placement="left" title="Comments" *ngIf="documentname">
+            {{overallcommentcount}} &nbsp;<em class="fe fe-message-circle text-white"></em>
+          </a>
+
+          <div class="air__menuTop__backdrop air__menuTop__mobileActionToggle"></div>
+          <div class="air__sidebar kit__customScroll" *ngIf="showsidebar">
+            <div class="air__sidebar__inner">
+              <a href="javascript: void(0);" (click)="openrightsidebar()"
+                class="air__sidebar__close air__sidebar__actionToggle fe fe-x-circle"></a>
+              <h5>
+                <strong>Comments</strong>
+              </h5>
+              <div class="cui__utils__line" style="margin-top: 2px; margin-bottom: 3px"></div>
+
+              <div class="air__sidebar__type" style="margin: 0.2rem 0 2rem;">
+
+                <div class="air__sidebar__type__items">
+                  <div class="row">
+                    <div class="col-12">
+
+                      <div class="d-flex flex-nowrap align-items-start pt-4">
+                        <div *ngIf="overallcommentcount"
+                          class="kit__utils__avatar kit__utils__avatar--size32 mr-4 flex-shrink-0 align-self-start">
+                          <img alt="" src="./assets/components/kit/core/img/avatars/avatar-2.png">
+                        </div>
+                        <div class="flex-grow-1">
+                          <div class="kit__g15__contentContainer" *ngFor="let comments0 of commentslist">
+                            <div class="d-flex flex-wrap mb-2">
+                              <div class="mr-auto">
+                                <div class="text-gray-6">
+                                  <span class="text-dark font-weight-bold">{{comments0.username}}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="mb-3" *ngFor="let comments1 of comments0.comments">
+                              {{comments1.comment}}<br>
+                              {{comments1.create_date | date:'medium'}}
+                              <div class="d-flex flex-nowrap align-items-start pt-4"
+                                *ngFor="let comments2 of comments1.replymessage">
+                                <div
+                                  class="kit__utils__avatar kit__utils__avatar--size32 mr-4 flex-shrink-0 align-self-start">
+                                  <img alt="" src="./assets/components/kit/core/img/avatars/avatar-2.png">
+                                </div>
+
+                                <div class="flex-grow-1">
+                                  <div class="kit__g15__contentContainer">
+                                    <div class="d-flex flex-wrap mb-2">
+                                      <div class="mr-auto">
+                                        <div class="text-gray-6">{{comments2.username}}
+                                        </div>
+                                        <div>{{comments2.create_date | date:'medium'}}</div>
+                                      </div>
+                                    </div>
+                                    <div class="mb-3">{{comments2.commentmessage}}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="d-flex flex-wrap justify-content-start align-items-start mb-3">
+                              <a class="text-blue mr-3" href="javascript: void(0);"><em
+                                  class="fe fe-message-square mr-1"></em> {{comments0.count}}
+                                Comments</a>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="row">
+
+              <style type="text/css">
+                .nav-pills .nav-link.active,
+                .nav-pills .show>.nav-link {
+                  color: #fff;
+                  background-color: #8bbdbf;
+                }
+
+
+                .kit__messaging__dialogItem:hover,
+                .kit__messaging__dialogItem--current {
+                  background-color: #8bbdbf;
+                  color: #FFF !important;
+                }
+
+                .kit__messaging__dialogName:hover,
+                .kit__messaging__dialogItem--current {
+                  background-color: #8bbdbf;
+                  color: #FFF !important;
+                }
+              </style>
+
+              <div class="col-lg-12 mb-1">
+                <div class="row">
+                  <div class="col-1 inputsecone">
+                    <div class="kit__customScroll kit__messaging__dialogItems ps-container ps-theme-kit"
+                      data-ps-id="0ce0e9f2-6b96-bc56-54ec-84d14598c258">
+                      <div class="kit__messaging__dialogItem d-flex flex-nowrap align-items-center"
+                        [ngClass]="{'kit__messaging__dialogItem--current':type=='inbox'}" tooltip="All Inbox"
+                        placement="left" container="body" (click)="type='inbox';documentname='';getInbox(type); p=1">
+                        <div class="">
+                          <em class="fe fe-mail font-size-32 mt-1 pt-1 mr-4 px-1"
+                            [ngClass]="{'text-white':type=='inbox'}"></em>
+                          Inbox
+                        </div>
+                        <div *ngIf="inboxcount && inboxcount.Inbox && inboxcount.Inbox != 0"
+                          style="position: absolute;left: 44px;top: 4px;">
+                          <div class="badge badge-dark"
+                            style="border-radius: 50%;height: 24px;width: 24px;line-height: 18px;font-size: x-small;">
+                            {{inboxcount.Inbox}}</div>
+                        </div>
+                      </div>
+                      <div class="kit__messaging__dialogItem d-flex flex-nowrap align-items-center"
+                        [ngClass]="{'kit__messaging__dialogItem--current':type=='Archived'}" tooltip="Archive"
+                        placement="left" container="body" (click)="type='Archived';documentname='';getInbox(type); p=1">
+                        <div class="">
+                          <em class="fe fe-archive font-size-32 mt-1 pt-1 mr-4 px-1"
+                            [ngClass]="{'text-white':type=='Archived'}"></em>
+                          Archive
+                        </div>
+                      </div>
+                      <div *ngIf="role=='Designer' || role=='Admin'"
+                        class="kit__messaging__dialogItem d-flex flex-nowrap align-items-center"
+                        (click)="type='document';documentname='';getInbox(type); p=1" tooltip="Review" placement="left"
+                        container="body" [ngClass]="{'kit__messaging__dialogItem--current':type=='document'}">
+                        <div class="">
+                          <em class="fe fe-plus-circle font-size-32 mt-1 pt-1 mr-4 px-1"
+                            [ngClass]="{'text-white':type=='document'}"></em>
+                          Review
+                        </div>
+                        <div *ngIf="inboxcount && inboxcount['Re-Edit'] && inboxcount['Re-Edit'] != 0"
+                          style="position: absolute;left: 44px;top: 91px;">
+                          <div class="badge badge-dark"
+                            style="border-radius: 50%;height: 24px;width: 24px;line-height: 18px;font-size: x-small;">
+                            {{inboxcount['Re-Edit']}}</div>
+                        </div>
+                      </div>
+                      <div *ngIf="role=='Reviewer' || role=='Admin'"
+                        class="kit__messaging__dialogItem  d-flex flex-nowrap align-items-center"
+                        (click)="type='approved';documentname='';getInbox(type); p=1" tooltip="My Pending"
+                        placement="left" container="body"
+                        [ngClass]="{'kit__messaging__dialogItem--current':type=='approved'}">
+                        <div class="">
+                          <em class="fe fe-loader font-size-32 mt-1 pt-1 mr-4 px-1"
+                            [ngClass]="{'text-white':type=='approved'}"></em>
+                          Pending
+                        </div>
+                        <div *ngIf="inboxcount && inboxcount.Approved && inboxcount.Approved != 0"
+                          style="position: absolute;left: 44px;top: 175px;">
+                          <div class="badge badge-dark"
+                            style="border-radius: 50%;height: 24px;width: 24px;line-height: 18px;font-size: x-small;">
+                            {{inboxcount.Approved}}</div>
+                        </div>
+                      </div>
+                      <div class="kit__messaging__dialogItem  d-flex flex-nowrap align-items-center"
+                        (click)="type='Allotment1';documentname='';getInbox(type); p=1" tooltip="Approved"
+                        placement="left" container="body"
+                        [ngClass]="{'kit__messaging__dialogItem--current':type=='Allotment1'}">
+                        <div class="">
+                          <em class="fe fe-check-circle font-size-32 mt-1 pt-1 mr-4 px-1"
+                            [ngClass]="{'text-white':type=='Allotment1'}"></em>
+                          Approved
+                        </div>
+                        <div *ngIf="inboxcount && inboxcount.Allotment1 && inboxcount.Allotment1 != 0"
+                          style="position: absolute;left: 44px;top: 175px;">
+                          <div class="badge badge-dark"
+                            style="border-radius: 50%;height: 24px;width: 24px;line-height: 18px;font-size: x-small;">
+                            {{inboxcount.Allotment1}}</div>
+                        </div>
+                      </div>
+                      <div *ngIf="role=='Admin'"
+                        class="kit__messaging__dialogItem  d-flex flex-nowrap align-items-center"
+                        (click)="type='Allotment';documentname='';getInbox(type); p=1" tooltip="Publish to Library"
+                        placement="left" container="body"
+                        [ngClass]="{'kit__messaging__dialogItem--current':type=='Allotment'}">
+                        <div class="">
+                          <em class="fe fe-layers  font-size-32 mt-1 pt-1 mr-4 px-1"
+                            [ngClass]="{'text-white':type=='Allotment'}"></em>
+                          Library
+                        </div>
+                        <div *ngIf="inboxcount && inboxcount.Allotment && inboxcount.Allotment != 0"
+                          style="position: absolute;left: 44px;top: 260px;">
+                          <div class="badge badge-dark"
+                            style="border-radius: 50%;height: 24px;width: 24px;line-height: 18px;font-size: x-small;">
+                            {{inboxcount.Allotment}}</div>
+                        </div>
+                      </div>
+                      <div class="kit__messaging__dialogItem  d-flex flex-nowrap align-items-center"
+                        (click)="type='Sent';documentname='';getsent(); p=1" tooltip="Sent" placement="left"
+                        container="body" [ngClass]="{'kit__messaging__dialogItem--current':type=='Sent'}">
+                        <div class="">
+                          <em class="fe fe-send  font-size-32 mt-1 pt-1 mr-4 px-1"
+                            [ngClass]="{'text-white':type=='Sent'}"></em>
+                          Sent
+                        </div>
+                      </div>
+
+                      <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                        <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                      </div>
+                      <div class="ps-scrollbar-y-rail" style="top: 0px; right: 0px;">
+                        <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-11 inputsectwo card" style="border-radius: calc(7px - 1px);border:1px solid #e4e9f0;">
+                    <ng-container *ngIf="type=='message' || type=='document_compose'">
+                      <form #createDoc="ngForm" (ngSubmit)="createDocument(createDoc.value,createDoc)">
+                        <div class="tab-content mt-2" id="v-pills-tabContent">
+
+                          <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel"
+                            aria-labelledby="v-pills-profile-tab">
+
+                            <label class="text-dark text-uppercase font-weight-bold" for="input-post-title"
+                              *ngIf="documentname || type=='document_compose'">Doc Name: </label>
+                            <div class="dropdown searchheader mr-auto d-none d-md-block ml-3"
+                              *ngIf="type=='document_compose'" style="left: 6rem;position:absolute;top: 0.2rem;">
+                              <a href="#" class="dropdown-toggle text-nowrap" data-toggle="dropdown"
+                                aria-expanded="false" data-offset="0,15">
+                                <span class="dropdown-toggle-text text-bold" style="    text-transform: uppercase;
+                font-size: 16px !important;
+                font-family: 'Poppins-Regular', sans-serif;
+                color: #333333;">{{documentname}} </span> </a>
+                              <div class="dropdown-menu" role="menu" style="padding: 16px;">
+
+                                <div class="air__topbar__searchContainer mb-4">
+                                  <em class="air__topbar__searchIcon fe fe-search"></em>
+                                  <input class="air__topbar__searchInput" name="text" type="text"
+                                    [(ngModel)]="searchText" placeholder="Start typing to search..." />
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="kit__l1">
+                                  <div class="text-uppercase font-size-12 mb-2 text-gray-6">Recent Files</div>
+                                  <ul class="list-unstyled" style="height: 200px;overflow-y: scroll;">
+                                    <li class="kit__l1__item" *ngFor="let data of searchlistdata | filter:searchText">
+                                      <a class="kit__l1__itemLink">
+                                        <div class="kit__l1__itemPic mr-3">
+                                          <em class="kit__l1__itemIcon fe fe-file"></em>
+                                        </div>
+                                        <div (click)="btnEditClick(data)">
+                                          <div class="text-blue">{{data.name}}</div>
+                                          <div class="text-muted">{{data.formType}}</div>
+                                        </div>
+                                      </a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row ml-1 mt-2">
+                              <div class="col-lg-4" style="padding-left: 0px;">
+
+                                <div class="form-group mb-4">
+                                  <label class="text-dark text-uppercase font-weight-bold"
+                                    for="input-post-title">Subject</label>
+                                  <input type="text" class="form-control" id="input-post-title" required name="subject"
+                                    [(ngModel)]="documentinfo.subject" placeholder="Enter Subject title" />
+                                </div>
+                              </div>
+
+                              <div class="col-lg-3" style="padding-left: 0px;">
+                                <div class="form-group mb-4">
+                                  <label class="text-dark text-uppercase font-weight-bold">Priority</label>
+                                  <dx-select-box [items]="prioritylist" [value]="priorityselected"
+                                    placeholder="Select priority" [showClearButton]="true"
+                                    [(ngModel)]="priorityselected" name="priority" required>
+                                  </dx-select-box>
+                                </div>
+                              </div>
+                              <div class="col-lg-2" style="padding-left: 0px;">
+                                <div class="form-group mb-4">
+                                  <label class="text-dark text-uppercase font-weight-bold">Assign for</label>
+                                  <dx-select-box [items]="assignforlist" placeholder="Select Assign for"
+                                    [showClearButton]="true" name="assignfor" [(ngModel)]="assignfor" required>
+                                  </dx-select-box>
+                                </div>
+                              </div>
+
+                              <div class="col-lg-3">
+                                Add Member: Share With
+                                <em class="fe fe-corner-right-up"></em>
+                                <div class="kit__utils__avatarGroup">
+                                  <a *ngFor="let data of selectedname"
+                                    class="activeborder kit__utils__avatar kit__utils__avatar--rounded" style="    line-height: 35px;
+                                    font-weight: bold;text-transform: uppercase;
+                                    color: #6eacaf !important;" tooltip="{{data.name}}">
+                                    <i class="fa fa-times removeuser" aria-hidden="true"
+                                      (click)="removeuser(data.id)"></i>
+                                    {{data.firstletters}}
+                                  </a>
+                                  <a class="kit__utils__avatarGroupAdd" (click)="addmember(userslist)"
+                                    style="border-radius: 50%;margin-left: 0px;">
+                                    <em class="fe fe-plus"></em>
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                              <div>
+                                <label class="text-dark text-uppercase font-weight-bold">Add Description</label>
+                                <dx-html-editor [height]="194" [(valueType)]="editorValueType" [(ngModel)]="description"
+                                  required name="description">
+                                  <dxo-toolbar>
+                                    <dxi-item formatName="undo"></dxi-item>
+                                    <dxi-item formatName="redo"></dxi-item>
+                                    <dxi-item formatName="separator"></dxi-item>
+                                    <dxi-item formatName="size"
+                                      [formatValues]="['8pt', '10pt', '12pt', '14pt', '18pt', '24pt', '36pt']">
+                                    </dxi-item>
+                                    <dxi-item formatName="font"
+                                      [formatValues]="['Arial', 'Courier New', 'Georgia', 'Impact', 'Lucida Console', 'Tahoma', 'Times New Roman', 'Verdana']">
+                                    </dxi-item>
+                                    <dxi-item formatName="separator"></dxi-item>
+                                    <dxi-item formatName="bold"></dxi-item>
+                                    <dxi-item formatName="italic"></dxi-item>
+                                    <dxi-item formatName="strike"></dxi-item>
+                                    <dxi-item formatName="underline"></dxi-item>
+                                    <dxi-item formatName="separator"></dxi-item>
+                                    <dxi-item formatName="alignLeft"></dxi-item>
+                                    <dxi-item formatName="alignCenter"></dxi-item>
+                                    <dxi-item formatName="alignRight"></dxi-item>
+                                    <dxi-item formatName="alignJustify"></dxi-item>
+                                    <dxi-item formatName="separator"></dxi-item>
+                                    <dxi-item formatName="color"></dxi-item>
+                                    <dxi-item formatName="background"></dxi-item>
+                                  </dxo-toolbar>
+                                  <p></p>
+                                </dx-html-editor>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <button class="btn btn-success btn-with-addon text-nowrap" type="submit"
+                                [disabled]="createDoc.invalid || selectedname.length == 0"
+                                style="background-color: #6EACAF !important;">
+                                <span class="btn-addon">
+                                  <em class="btn-addon-icon fe fe-navigation"></em>
+                                </span>
+                                Share & Post
+                              </button>
+                            </div>
+                          </div>
+
+                          <div class="tab-pane fade" id="v-pills-messages" role="tabpanel"
+                            aria-labelledby="v-pills-messages-tab">
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                            Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                            unknown printer took a galley of type and scrambled it to make a type specimen
+                            book. It has survived not only five centuries, but also the leap into electronic
+                            typesetting, remaining essentially unchanged. It was popularised in the 1960s
+                            with the release of Letraset sheets containing Lorem Ipsum passages, and more
+                            recently with desktop publishing software like Aldus PageMaker including
+                            versions of Lorem Ipsum.
+                          </div>
+
+                          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel"
+                            aria-labelledby="v-pills-settings-tab">
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                            Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+                            unknown printer took a galley of type and scrambled it to make a type specimen
+                            book. It has survived not only five centuries, but also the leap into electronic
+                            typesetting, remaining essentially unchanged. It was popularised in the 1960s
+                            with the release of Letraset sheets containing Lorem Ipsum passages, and more
+                            recently with desktop publishing software like Aldus PageMaker including
+                            versions of Lorem Ipsum.
+                          </div>
+
+                        </div>
+                      </form>
+
+                      <ng-template #userslist>
+                        <div class="container popupbg"
+                          style="padding: 0px;border-radius: 25px;background-color: white;">
+                          <div class="modal-header">
+                            <h5 class="heading-3">Users</h5>
+                            <a type="button" class="close pull-right" style="background-color: transparent !important;"
+                              aria-label="Close" (click)="closepopup()">
+                              <span aria-hidden="true" style="color: #fff;">&times;</span>
+                            </a>
+                          </div>
+                          <div class="popup" style="padding: 20px;">
+                            <div class="air__topbar__searchContainer" style="margin-bottom: 10px;">
+                              <em class="air__topbar__searchIcon fe fe-search"></em>
+                              <input id="button-alignment0" class="air__topbar__searchInput" type="text"
+                                placeholder="Start typing to search..." [(ngModel)]="searchText0"
+                                (keyup)="userlistsearch($event)" />
+                            </div>
+                            <div class="content" style="height: 200px; overflow-y: scroll;">
+                              <label *ngFor="let data of userlist; let i = index;" class="kit__utils__avatarGroup">
+                                <a [ngClass]="getactiveuser(data.useraccountId) ? 'activeborder' : ''"
+                                  style="border-radius: 100px;margin-right: 5px;">
+                                  <div id="profileImage" placement="top"
+                                    (click)="getactivename(data.useraccountId, data.Name, i,data.firstname)"
+                                    container="body" [ngStyle]="getbgColor(data.Name)">{{data.firstname}}</div>
+                                </a><i class="fa fa-circle" aria-hidden="true" style="margin-right:5px;"
+                                  [style.color]="data.color"></i> {{data.Name}} - {{data.Role}}</label>
+                            </div>
+                          </div>
+                          <a class="btn btn-primary"
+                            style="margin: 20px;background-color: #6eacaf !important;border: none !important;"
+                            (click)="adduser()">Add</a>
+                        </div>
+                      </ng-template>
+                    </ng-container>
+                    <ng-container
+                      *ngIf="type=='inbox' || type == 'approved' || type == 'Archived' || type == 'document' || type == 'Allotment' || type == 'Allotment1' || type == 'Sent'">
+                      <div class="table-responsive table-striped" *ngIf="data_mail_value && data_mail_value.length>0"
+                        [ngStyle]="{'margin-top': type=='document' || type=='inbox' ? '3.5rem' : '0rem'  }"
+                        style="margin-top: 3.5rem ;">
+                        <table class="table table-hover nowrap kit__mail__box">
+                          <tbody>
+                            <tr
+                              *ngFor="let data of data_mail_value | paginate: { itemsPerPage: 10, currentPage: p, totalItems: totalitems }"
+                              [style.font-weight]="data.status==1 ?'bold':'normal'">
+                              <td class="text-center">
+                                <div class="kit__utils__avatar kit__utils__avatar--rounded"
+                                  style="display: inline-block;margin-right: 10px;">
+                                  <div id="profileImage" placement="top" container="body"
+                                    [ngStyle]="getbgColor(data.From)">{{data.firstname}}</div>
+                                </div>
+                                <i class="fa fa-envelope-open-o" style="cursor: pointer;" *ngIf="data.status==0"
+                                  aria-hidden="true" (click)="markasunread(data)" tooltip="Mark as Unread"></i>
+                                <i class=" fe fe-mail"
+                                  (click)="gotomailinfo(data.designproductId,data.assigneduserid,data.id,data.attachment,data.doctype)"
+                                  style=" font-size: large;cursor: pointer;" *ngIf="data.status==1"
+                                  aria-hidden="true"></i>
+                              </td>
+                              <td
+                                (click)="gotomailinfo(data.designproductId,data.assigneduserid,data.id,data.attachment,data.doctype)"
+                                style="cursor: pointer;">{{data.From}}</td>
+                              <td
+                                (click)="gotomailinfo(data.designproductId,data.assigneduserid,data.id,data.attachment,data.doctype)"
+                                style="cursor: pointer;">{{data.subject}}</td>
+                              <td><span *ngIf="data.priority == 'Medium Priority'">Medium</span><span
+                                  *ngIf="data.priority == 'High Priority'">High</span><span
+                                  *ngIf="data.priority == 'Low Priority'">Low</span></td>
+                              <td>
+                                <button *ngIf="type == 'Allotment' && data.librarystatus==true"
+                                  class="badge btn-primary" type="button" disabled
+                                  (click)="btnsubmitClick(data.designproductId)"
+                                  style="background-color:#d4d2d2;;cursor: pointer;">Publish</button>
+                                <span *ngIf="type == 'Allotment' && data.librarystatus==false" class="badge btn-primary"
+                                  (click)="btnsubmitClick(data.designproductId)"
+                                  style="background-color:#8bbdbf;;cursor: pointer; ">Publish</span>
+                              </td>
+                              <!-- <td><em class="fe fe-paperclip text-default" *ngIf="data.attachment =='True'"></em></td> -->
+                              <td>{{data.create_date | date:'MM/dd/yyyy'}}</td>
+                              <td>{{data.create_date | date:'shortTime'}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <pagination-controls *ngIf="data_mail_value && data_mail_value.length>0"
+                        (pageChange)="p=$event;pageChanged($event)"></pagination-controls>
+
+                      <ng-container *ngIf="data_mail_value==null; else emptyDataTemplate">
+                        <div class="initial__inbox_loading"
+                          style="z-index:1;top: 0%; left: 0%; position: absolute;opacity:0.7;">
+                          <div style="position: absolute;bottom: 23px;left: 41%;font-size: 23px;margin: 0 auto;">
+                            No Data to Display...
+                          </div>
+                        </div>
+                      </ng-container>
+                      <ng-template #emptyDataTemplate>
+                        <div *ngIf="data_mail_value.length==0;" class="initial__inbox_loading"
+                          style="z-index:1;top: 0%; left: 0%; position: absolute;opacity:0.7;">
+                          <div style="position: absolute;bottom: 23px;left: 29%;font-size: 23px;margin: 0 auto;">
+                            Getting workspace ready !... One moment please
+                          </div>
+                        </div>
+                      </ng-template>
+
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+share.ts
+
+import { Component, OnInit, TemplateRef, ViewChild, ElementRef, Input } from '@angular/core';
+import { from, Observable, Subscription } from 'rxjs';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { UserService } from '../../../shared/services/user.service';
+import * as fileSaver from 'file-saver';
+import { ToastrService } from 'ngx-toastr';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { User } from 'src/app/shared/models/user.model';
+@Component({
+  selector: 'app-share',
+  templateUrl: './share.component.html',
+  styleUrls: ['./share.component.scss']
+})
+export class ShareComponent implements OnInit {
+  modalRef: BsModalRef;
+  editorValue: string = '';
+  subscription: Subscription;
+  subject:any = ''
+  searchText:any;
+  searchText0:any;
+  priority:any = ''
+  assignfor:any = ''
+  editorValueType:any = ''
+  description:any = ''
+  showsidebar: boolean =false;
+  naviDate: any;
+  p: any;
+  prioritylist=["High Priority","Medium Priority","Low Priority"];
+  assignforlist=["Approval","Move to staging","Re-Edit"]
+  documentname: any;
+  documentid: any;
+  userlist: any;
+  selectedname=[];
+  createDoc = {}
+  userid: string;
+  commentslist: any;
+  overallcommentcount: any;
+  documentinfo: any={create_date: "",
+  firstname: "",
+  priority: "",
+  subject: "",
+  useraccount_fk: '',
+  username: ""};
+  priorityselected: any;
+  role: string;
+  totalitems: any;
+  bulist: any;
+  constructor(private route:Router,private userService: UserService, private router: Router, private toast: ToastrService,private modalService: BsModalService) { 
+    this.subscription = this.userService.navItem$
+    .subscribe(item => {
+      this.naviDate = item
+      if (item)
+        localStorage.setItem("localData", JSON.stringify(this.naviDate));
+    }
+    )
+  }
+  searchlistdata:any = []
+  ngOnInit() {
+    this.userid=localStorage.getItem("userid");
+    this.role=localStorage.getItem("role");
+      this.naviDate = JSON.parse(localStorage.getItem("localData"));
+      let url = window.location.href;
+     if (this.naviDate && url.includes('/notificationshare')){
+       this.type='document_compose'
+      this.documentname=this.naviDate.documentname?this.naviDate.documentname:'';
+      this.documentid=this.naviDate.documentid;
+      const designproductid = {
+        'designproductid': this.documentid,
+      }
+      this.userService.commentslists(designproductid).subscribe(data => {
+        this.commentslist=data.commentlist;
+        this.overallcommentcount=data.overallcount
+      });
+      const documentId = {
+        'designproductid': this.documentid,
+      }
+      this.userService.getdocumentinfo(documentId).subscribe(docdata => {
+        if(docdata){
+        this.documentinfo=docdata;
+        if(docdata.useraccount_fk!=''){
+          this.priorityselected=docdata.priority;
+        this.selectedname.push({"id":docdata.useraccount_fk,"name":docdata.username,"firstletters":docdata.firstname});
+        }else{
+          this.priorityselected="";
+        }
+      }
+      });
+      }
+      this.userService.searchlistdata().subscribe(data => {
+        this.searchlistdata=data;
+      });
+      this.userService.businessunitlist().subscribe(data => {
+        this.bulist=data;
+      });
+      this.getuserslist();
+      this.getalldata();
+  }
+  inbox:any = []
+  type:any = 'inbox'
+  inboxcount:any;
+  userDetail:User;
+  getalldata(){
+    this.userService.getalllibraryData().subscribe(data => {
+      this.inbox = data;
+    })  
+    this.userService.currentUser.subscribe(
+      (userData) => {
+        if (userData){
+          this.userDetail = userData;
+          this.getcount_refresh()}
+        })
+    
+    this.getInbox(this.type) 
+  }
+  onValueChanged(e){
+    let type_value = ''
+    if(this.type == 'inbox'){
+      type_value = 'inbox'
+    }else if(this.type == 'approved'){
+      type_value = 'Approval'
+    }
+    else if(this.type == 'Archived'){
+      type_value = 'Archived'
+    }
+    else if(this.type == 'Allotment'){
+      type_value = 'Allotment'
+    }
+    else if(this.type == 'Allotment1'){
+      type_value = 'Allotment1'
+    }else{
+      type_value = 'ReEdit'
+    }
+    var obj={"type1": type_value ,
+      "content": e.value};
+    this.userService.bubasedinboxsearch(obj).subscribe(data => {
+      if(data[0]){
+        this.data_mail_value = data;
+        this.totalitems=data.length
+      }
+      else{
+        this.data_mail_value = null;
+        this.totalitems=0;
+      }
+    })
+  }
+  gotomailinfo(designproductId,From,messageid,attachment,doctype){
+  //  console.log(doctype)
+    var designid='';
+    if(designproductId==null){
+      designid=""
+    }else{
+      designid=designproductId
+    }
+    var obje = {
+      "designproductId":designid,
+      "senderId":String(From),
+      "useraccountId": this.userid,
+      "messageid": messageid,
+      "attachment": attachment,
+      "doctype": doctype,
+      "type": this.type
+    }
+    this.userService.changeNav(obje)
+    this.router.navigate([`/client/inbox_compose`]);
+  }
+  btnsubmitClick(id) {
+    console.log(id)
+      this.router.navigate([`/client/clientdashboard/myallotmentsubmit/${id}`])
+  }
+  getcount_refresh(){
+    this.userService.getallcount().subscribe(data => {
+      this.userDetail.operationMessage = data.overallinbox;
+    }) 
+    this.userService.getallinboxcount().subscribe(data => {
+      this.inboxcount = data;
+    })
+  }
+  data_mail_value = []
+  getInbox(type){
+    let type_value = ''
+    this.data_mail_value = []
+    if(type == 'inbox'){
+      type_value = 'inbox'
+    }else if(type == 'approved'){
+      type_value = 'Approval'
+    }
+    else if(type == 'Archived'){
+      type_value = 'Archived'
+    }
+    else if(type == 'Allotment'){
+      type_value = 'Allotment'
+    }
+    else if(type == 'Allotment1'){
+      type_value = 'Allotment1'
+    }else{
+      type_value = 'ReEdit'
+    }
+    const totalMessageJson = {
+      'pageno': 1,
+      'type1': type_value
+    }
+    this.userService.getallinbox(totalMessageJson).subscribe(data => {
+      if(data[0]){
+      this.data_mail_value = data[0].finallist;
+      this.totalitems=data[0].totalno
+      }
+      else{
+        this.data_mail_value = null;
+        this.totalitems=0;
+      }
+    }) 
+
+  }
+  getsent(){
+    this.data_mail_value = [];
+    const sendMessageJson = {
+      'pageno': 1,
+      'type1': 'inbox'
+    }
+    this.userService.getsentbox(sendMessageJson).subscribe(data => {
+      if(data[0]){
+      this.data_mail_value = data[0].finallist;
+      this.totalitems=data[0].totalno
+      }
+      else{
+        this.data_mail_value = null;
+        this.totalitems=0;
+      }
+    }) 
+  }
+  getSearchBoxValue(key){
+var obj={
+  "content": String(key),
+  "type1": String(this.type)
+}
+this.userService.inboxsearch(obj).subscribe(data => {
+  this.data_mail_value = data;
+  this.totalitems=data.length
+}) 
+  }
+  pageChanged(e){
+    console.log(e)
+    this.data_mail_value = [];
+    if(this.type=='Sent'){
+      const sentMessageJson = {
+        'pageno': e,
+        'type1': 'inbox'
+      }
+    this.userService.getsentbox(sentMessageJson).subscribe(data => {
+      if(data[0]){
+      this.data_mail_value = data[0].finallist;
+      this.totalitems=data[0].totalno;
+      }
+      else{
+        this.data_mail_value = null;
+        this.totalitems=0;
+      }
+    }) 
+  }else{
+    let type_value='';
+    if(this.type == 'inbox'){
+      type_value = 'inbox'
+    }else if(this.type == 'approved'){
+      type_value = 'Approval'
+    }
+    else if(this.type == 'Archived'){
+      type_value = 'Archived'
+    }
+    else if(this.type == 'Allotment'){
+      type_value = 'Allotment'
+    }
+    else if(this.type == 'Allotment1'){
+      type_value = 'Allotment1'
+    }else{
+      type_value = 'ReEdit'
+    }
+    const totalMessageJson = {
+      'pageno': e,
+      'type1': type_value
+    }
+    this.userService.getallinbox(totalMessageJson).subscribe(data => {
+      if(data[0]){
+      this.data_mail_value = data[0].finallist;
+      this.totalitems=data[0].totalno;
+      }
+      else{
+        this.data_mail_value = null;
+        this.totalitems=0;
+      }
+    }) 
+  }
+      }
+  getactivename(id,name,i,firstletters){
+    console.log(id)
+    if (this.selectedname.filter(x => x.id === id).length === 0) {
+      this.selectedname.push({'id':id, 'name':name, 'firstletters':firstletters});
+      this.getactiveuser(id);
+    }else{
+      this.selectedname.forEach( (item, index) => {
+        if(item.id === id){
+          this.selectedname.splice(index, 1);
+          this.getactiveuser(id);
+        }
+            })
+//            this.selectedname=this.selectedname;
+    }
+  }
+  removeuser(id){
+    this.selectedname.forEach( (item, index) => {
+      if(item.id === id){
+        this.selectedname.splice(index, 1);
+      }
+          })
+  }
+  adduser(){
+    this.modalRef.hide()
+  }
+  closepopup(){
+    this.modalRef.hide();
+    this.selectedname=[];
+  }
+  getactiveuser(id){
+    for(var e=0;e<this.selectedname.length;e++){
+     // console.log(this.selectedname[e])
+      if(this.selectedname[e].id==id){
+        return true;
+      }
+    }
+    if (this.selectedname.filter(x => x.id === id).length === 0) {
+      return false;
+    }
+  }
+  getbgColor(char){
+    let myStyles = {
+      'background-color': '#2d8d99'
+    };
+    if(char.charAt(0).toUpperCase() == 'A'){
+      myStyles["background-color"] = '#34495e'
+    }else if(char.charAt(0).toUpperCase() == 'D'){
+      myStyles["background-color"] = '#2d8d99'
+    }else if(char.charAt(0).toUpperCase() == 'C'){
+      myStyles["background-color"] = '#550055'
+    }else if(char.charAt(0).toUpperCase() == 'J'){
+      myStyles["background-color"] = '#5a4586'
+    }
+    return myStyles
+  }
+  getChar(char){
+    return char.charAt(0).toUpperCase()
+  }
+  btnEditClick(data){
+    this.documentname = data.name;
+    this.documentid = data.designproductId
+    const designproductid = {
+      'designproductid': data.designproductId,
+    }
+    this.userService.commentslists(designproductid).subscribe(data => {
+      this.commentslist=data.commentlist;
+      this.overallcommentcount=data.overallcount
+    });
+    const designProductId = {
+      'designproductid': data.designproductId,
+    }
+    this.userService.getdocumentinfo(designProductId).subscribe(docdata0 => {
+      if(docdata0){
+      this.documentinfo=docdata0;
+      if(docdata0.useraccount_fk!=''){
+        this.priorityselected=docdata0.priority;
+      this.selectedname.push({"id":docdata0.useraccount_fk,"name":docdata0.username,"firstletters":docdata0.firstname});
+      }else{
+        this.priorityselected="";
+      }
+    }
+    });
+  }
+  createDocument(value, createDoc) {
+    var userlist=JSON.stringify(this.selectedname);
+//userlist=userlist.replace(/^"(.*)"$/, '$1');
+//console.log(userlist);
+ // var userdata=JSON.stringify(userlist);
+  //userdata=userdata.slice(1, -1);
+  var doctype='';
+  if(this.naviDate && this.naviDate.doctype!=null){
+    doctype=this.naviDate.doctype;
+  }else{
+    doctype=''
+  }
+  var assignf='';
+  if(value.assignfor=="Re-Edit"){
+    assignf="ReEdit"
+  }
+  else if(value.assignfor=="Move to staging"){
+    assignf="Allotment"
+  }
+  else{
+    assignf=value.assignfor;
+  }
+    const obj={
+      "assignedfor": ""+assignf+"",
+      "assigneduser_fk": userlist,
+      "description": ""+value.description+"",
+      "designproduct_fk": this.documentid?this.documentid:"",
+      "name": this.documentname?this.documentname:'',
+      "priority": ""+this.priorityselected+"",
+      "subject": ""+value.subject+"",
+      "doctype": doctype
+    }
+    this.userService.shareform(obj).subscribe(data => {
+      this.toast.success('Successfully Sent', '', { progressBar: true });
+      createDoc.reset();
+      this.selectedname=[];
+      this.getcount_refresh();
+      this.documentname='';
+      this.type='inbox';
+      this.getInbox('inbox');
+    });
+//    console.log(value);
+  //  console.log(createDoc)
+  }
+  getuserslist(){
+    const usernameList = {
+      'role_fk': this.role,
+    }
+    this.userService.userslist(usernameList).subscribe(data => {
+ this.userlist=data;
+    });
+  }
+  markasunread(data){
+    const idJson = {
+      'id': data.id,
+    }
+this.userService.markasunreadmsg(idJson).subscribe(msg => {
+ this.getInbox(this.type);
+ this.getcount_refresh();
+     });
+  }
+  userlistsearch(e){
+    var key="";
+    if(e.target.value==''){
+      key="0";
+    }else{
+      key=e.target.value;
+    }
+    const keyJson = {
+      'searchword': key,
+    }
+    this.userService.userslistsearch(keyJson).subscribe(data => {
+      this.userlist=data;
+         });
+  //  console.log(e.target.value) 
+  }
+  openrightsidebar(){
+this.showsidebar=!this.showsidebar;
+  }
+  addmember(userslist){
+    this.modalRef = this.modalService.show(userslist, { class: 'modal-md', backdrop: 'static' });
+  }
+}
