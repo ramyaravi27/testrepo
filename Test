@@ -8467,3 +8467,65 @@ angular.json
   },
   "defaultProject": "ng-adminx"
 }
+
+
+
+templatejson - payload
+
+[
+    {
+        "version": "4.3.1",
+        "objects": [
+            {
+                "type": "circle",
+                "version": "4.3.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 213.5,
+                "top": 104.11,
+                "width": 5,
+                "height": 5,
+                "fill": "transparent",
+                "stroke": "transparent",
+                "strokeWidth": 0,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "opacity": 1,
+                "shadow": null,
+                "visible": true,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0,
+                "radius": 10,
+                "startAngle": 0,
+                "endAngle": 6.283185307179586,
+                "id": 383239,
+                "objtype": "pin",
+                "text": "pin",
+                "tmpid": 996997,
+                "userid": "39",
+                "usercolor": "#FFF599",
+                "resolvedstatus": false
+            }
+        ],
+        "background": "transparent"
+    },
+    {
+        "page": {
+            "width": 816,
+            "height": 248
+        }
+    }
+]
